@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Plus, ShoppingCart } from 'lucide-react';
 import { formatIDR } from '../../lib/format';
 
-export default function ItemRow({ item, quantity, selectedVariant, notes, onQuantityChange, onVariantChange, onRemove }) {
+export default function ItemRow({ item, quantity, selectedVariant, notes, onQuantityChange, onVariantChange, onRemove, onAddToOrder }) {
   if (!item) return null;
 
   const [showConfirm, setShowConfirm] = useState(false);
@@ -74,7 +74,7 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
         {notes && <p className="text-[12px] italic text-[#9A9A96] mt-1">{notes}</p>}
       </div>
 
-      <div className="flex flex-col items-end gap-1.5 shrink-0 min-w-[80px]">
+      <div className="flex flex-col items-end gap-2 shrink-0 min-w-[80px]">
         <span className="text-[14px] font-semibold text-[#111111] tabular-nums">{formatIDR(lineTotal)}</span>
         <div className="flex items-center gap-1">
           <button
@@ -93,6 +93,17 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
             +
           </button>
         </div>
+        {/* Quick add to order */}
+        {onAddToOrder && (
+          <button
+            onClick={() => onAddToOrder(item)}
+            className="flex items-center gap-1 text-[12px] font-medium text-[#16A34A] hover:text-[#15803d] transition-colors px-2 py-0.5 rounded-full border border-[#DCFCE7] bg-[#F0FDF4] hover:bg-[#DCFCE7]"
+            aria-label="Add to order"
+          >
+            <ShoppingCart size={12} />
+            <span>Add</span>
+          </button>
+        )}
       </div>
     </div>
   );

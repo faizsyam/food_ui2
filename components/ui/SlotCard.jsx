@@ -1,8 +1,31 @@
-import React from 'react';
-import { Star, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, Clock, Plus, ShoppingCart, ChevronDown, ChevronUp } from 'lucide-react';
 import PersonTag from './PersonTag';
 import ItemRow from './ItemRow';
 import { formatIDR } from '../../lib/format';
+
+function BrowseItemRow({ item, onAdd }) {
+  const isUnavailable = item.available === false;
+  if (isUnavailable) return null;
+  return (
+    <div className="flex items-center gap-3 py-1.5 hover:bg-[#FAFAFA] rounded transition-colors">
+      <div className="flex-1 min-w-0">
+        <span className="text-[14px] font-medium text-[#111111]">{item.name}</span>
+        {item.description && (
+          <p className="text-[12px] text-[#9A9A96] line-clamp-1">{item.description}</p>
+        )}
+      </div>
+      <span className="text-[14px] font-semibold text-[#111111] tabular-nums">{formatIDR(item.price || 0)}</span>
+      <button
+        onClick={onAdd}
+        className="shrink-0 w-8 h-8 rounded-full bg-[#E8521A] text-white flex items-center justify-center hover:bg-[#d4491a] transition-colors"
+        aria-label={`Add ${item.name} to order`}
+      >
+        <Plus size={16} />
+      </button>
+    </div>
+  );
+}
 
 export default function SlotCard({
   slot,
@@ -13,10 +36,10 @@ export default function SlotCard({
   onVariantChange,
   onSelectOption,
   onAddOrderItem,
-  onAddItem,
 }) {
   const resolvedOptions = slot.resolvedOptions || [];
   const selectedOptionId = slot.selected_option_id;
+  const [showBrowseMore, setShowBrowseMore] = useState(false);
 
   if (!resolvedOptions || resolvedOptions.length === 0) {
     return (
@@ -32,6 +55,45 @@ export default function SlotCard({
 
   const optionTotal =
     (selectedOption?.subtotal || 0) + (selectedOption?.delivery_fee || 0);
+
+  // Items already in the current option
+  const currentItemIds = new Set(
+    (selectedOption?.resolvedItems || []).map((i) => i.item_id || i.id)
+  );
+
+  // Restaurant info
+  const restaurantId = selectedOption?.restaurant?.id;
+  const moreItems = (menus || []).filter(
+    (m) =>
+      m.restaurant_id === restaurantId &&
+      m.available !== false &&
+      !currentItemIds.has(m.id)
+  );
+
+  // Add all items in this option to the order
+  const handleAddAll = () => {
+    const items = selectedOption?.resolvedItems || [];
+    for (const item of items) {
+      onAddOrderItem?.(slot, { ...item, restaurant: selectedOption?.restaurant });
+    }
+  };
+
+  // Add a single item to the order
+  const handleAddSingle = (item) => {
+    onAddOrderItem?.(slot, { ...item, restaurant: selectedOption?.restaurant });
+  };
+
+  // Add a browse-more item
+  const handleBrowseAdd = (menuItem) => {
+    onAddOrderItem?.(slot, {
+      ...menuItem,
+      item_id: menuItem.id,
+      quantity: 1,
+      variant: null,
+      price: menuItem.price || 0,
+      restaurant: selectedOption?.restaurant,
+    });
+  };
 
   return (
     <div className="bg-white border border-[#EFEFED] rounded-xl overflow-hidden">
@@ -117,8 +179,20 @@ export default function SlotCard({
                   onVariantChange?.(slot.slot_id, id, variant)
                 }
                 onRemove={(id) => onItemRemove?.(slot.slot_id, id)}
+                onAddToOrder={() => handleAddSingle(item)}
               />
             ))}
+          </div>
+
+          {/* Add all to order button */}
+          <div className="mt-4">
+            <button
+              onClick={handleAddAll}
+              className="w-full flex items-center justify-center gap-2 text-[14px] font-medium text-white bg-[#E8521A] hover:bg-[#d4491a] transition-colors rounded-lg px-4 py-2.5"
+            >
+              <ShoppingCart size={16} />
+              <span>Add all {(selectedOption.resolvedItems || []).length} items to order</span>
+            </button>
           </div>
 
           {/* Price summary */}
@@ -140,6 +214,32 @@ export default function SlotCard({
               <span className="tabular-nums">{formatIDR(optionTotal)}</span>
             </div>
           </div>
+
+          {/* Browse more from this restaurant */}
+          {moreItems.length > 0 && (
+            <div className="mt-4 pt-3 border-t border-[#EFEFED]">
+              <button
+                onClick={() => setShowBrowseMore((p) => !p)}
+                className="w-full flex items-center justify-between text-[14px] text-[#6B6B67] hover:text-[#111111] transition-colors"
+              >
+                <span className="font-medium">
+                  Browse more from {selectedOption.restaurant?.name}
+                </span>
+                {showBrowseMore ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </button>
+              {showBrowseMore && (
+                <div className="mt-2 pt-2 border-t border-[#EFEFED] max-h-60 overflow-y-auto">
+                  {moreItems.map((item) => (
+                    <BrowseItemRow
+                      key={item.id}
+                      item={item}
+                      onAdd={() => handleBrowseAdd(item)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
