@@ -1,0 +1,1453 @@
+[
+  {
+    "id": "item_001",
+    "restaurant_id": "rest_001",
+    "category": "Nasi & Lauk",
+    "name": "Nasi Campur Bu Tini",
+    "description": "Steamed rice topped with a generous mix of fried chicken, egg, tempeh, and vegetables.",
+    "price": 22000,
+    "tags": [
+      "best-seller",
+      "halal",
+      "comfort food",
+      "family portions"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Extra Rice",
+        "price_delta": 3000
+      },
+      {
+        "name": "Extra Ayam",
+        "price_delta": 8000
+      }
+    ]
+  },
+  {
+    "id": "item_002",
+    "restaurant_id": "rest_001",
+    "category": "Nasi & Lauk",
+    "name": "Ayam Goreng Kremes",
+    "description": "Crispy fried chicken topped with savory golden kremes crumbs.",
+    "price": 18000,
+    "tags": [
+      "best-seller",
+      "halal",
+      "crispy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_003",
+    "restaurant_id": "rest_001",
+    "category": "Nasi & Lauk",
+    "name": "Rendang Daging",
+    "description": "Slow-cooked beef in rich coconut spice gravy until tender and fragrant.",
+    "price": 28000,
+    "tags": [
+      "spicy",
+      "halal",
+      "heavy"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 15,
+      "discounted_price": 23800,
+      "label": "Buy 1 Get 1"
+    }
+  },
+  {
+    "id": "item_004",
+    "restaurant_id": "rest_001",
+    "category": "Nasi & Lauk",
+    "name": "Tempe & Tahu Bacem",
+    "description": "Sweet soy-braised tempeh and tofu, a homely everyday side dish.",
+    "price": 12000,
+    "tags": [
+      "vegetarian",
+      "halal",
+      "budget-friendly"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_005",
+    "restaurant_id": "rest_001",
+    "category": "Nasi & Lauk",
+    "name": "Ikan Asin Goreng",
+    "description": "Salted fish fried until crisp, served as a punchy savory side.",
+    "price": 15000,
+    "tags": [
+      "salty",
+      "halal"
+    ],
+    "available": false,
+    "variants": []
+  },
+  {
+    "id": "item_006",
+    "restaurant_id": "rest_001",
+    "category": "Sayur & Sambal",
+    "name": "Sayur Asem",
+    "description": "Light, tangy vegetable soup with tamarind and fresh greens.",
+    "price": 10000,
+    "tags": [
+      "vegetarian",
+      "light",
+      "halal"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 20,
+      "discounted_price": 8000,
+      "label": "Weekend Special"
+    }
+  },
+  {
+    "id": "item_007",
+    "restaurant_id": "rest_001",
+    "category": "Sayur & Sambal",
+    "name": "Sambal Terasi",
+    "description": "Fiery shrimp-paste chili sambal pounded fresh to order.",
+    "price": 5000,
+    "tags": [
+      "spicy",
+      "halal"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_008",
+    "restaurant_id": "rest_001",
+    "category": "Minuman",
+    "name": "Es Teh Manis",
+    "description": "Classic sweet iced tea, the everyday companion to any warung meal.",
+    "price": 5000,
+    "tags": [
+      "budget-friendly",
+      "halal"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_009",
+    "restaurant_id": "rest_001",
+    "category": "Minuman",
+    "name": "Es Jeruk",
+    "description": "Freshly squeezed iced orange juice with a hint of sweetness.",
+    "price": 6000,
+    "tags": [
+      "budget-friendly",
+      "halal"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 25,
+      "discounted_price": 4500,
+      "label": "Flash Sale"
+    }
+  },
+  {
+    "id": "item_010",
+    "restaurant_id": "rest_002",
+    "category": "Mains",
+    "name": "Bebek Bakar Kayu Bara",
+    "description": "Charcoal-grilled duck marinated in a smoky spice blend until deeply tender.",
+    "price": 75000,
+    "tags": [
+      "best-seller",
+      "halal",
+      "premium",
+      "spicy"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Whole Duck (Share)",
+        "price_delta": 50000
+      }
+    ]
+  },
+  {
+    "id": "item_011",
+    "restaurant_id": "rest_002",
+    "category": "Mains",
+    "name": "Iga Bakar Madu",
+    "description": "Beef short ribs glazed with honey and slow-grilled over charcoal.",
+    "price": 95000,
+    "tags": [
+      "best-seller",
+      "halal",
+      "heavy",
+      "premium"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_012",
+    "restaurant_id": "rest_002",
+    "category": "Mains",
+    "name": "Gurame Asam Manis",
+    "description": "Whole gourami fish fried crisp and topped with tangy sweet-sour sauce.",
+    "price": 68000,
+    "tags": [
+      "halal",
+      "seafood"
+    ],
+    "available": false,
+    "variants": []
+  },
+  {
+    "id": "item_013",
+    "restaurant_id": "rest_002",
+    "category": "Mains",
+    "name": "Sate Maranggi",
+    "description": "Marinated grilled beef skewers from Purwakarta, served with sweet soy and shallots.",
+    "price": 45000,
+    "tags": [
+      "halal",
+      "spicy",
+      "popular"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 30,
+      "discounted_price": 31500,
+      "label": "Lunch Deal"
+    }
+  },
+  {
+    "id": "item_014",
+    "restaurant_id": "rest_002",
+    "category": "Mains",
+    "name": "Tahu Tempe Penyet",
+    "description": "Smashed fried tofu and tempeh served with a fiery hand-pounded sambal.",
+    "price": 28000,
+    "tags": [
+      "vegetarian",
+      "halal",
+      "spicy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_015",
+    "restaurant_id": "rest_002",
+    "category": "Small Plates",
+    "name": "Perkedel Jagung",
+    "description": "Sweet corn fritters, crisp on the outside and soft within.",
+    "price": 22000,
+    "tags": [
+      "vegetarian",
+      "halal",
+      "snack"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_016",
+    "restaurant_id": "rest_002",
+    "category": "Drinks",
+    "name": "Es Kelapa Muda",
+    "description": "Young coconut water served chilled with tender coconut flesh.",
+    "price": 25000,
+    "tags": [
+      "refreshing",
+      "halal"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_017",
+    "restaurant_id": "rest_002",
+    "category": "Drinks",
+    "name": "Kopi Tubruk",
+    "description": "Traditional Indonesian black coffee, brewed strong and unfiltered.",
+    "price": 20000,
+    "tags": [
+      "halal",
+      "caffeine"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_018",
+    "restaurant_id": "rest_002",
+    "category": "Drinks",
+    "name": "Wedang Jahe",
+    "description": "Warm spiced ginger tea, soothing and lightly sweet.",
+    "price": 18000,
+    "tags": [
+      "halal",
+      "warm",
+      "comfort food"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_019",
+    "restaurant_id": "rest_003",
+    "category": "Ramen",
+    "name": "Shoyu Ramen",
+    "description": "Classic soy-based broth ramen with chashu pork, egg, and scallions.",
+    "price": 48000,
+    "tags": [
+      "best-seller",
+      "comfort food",
+      "contains pork"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Extra Noodle",
+        "price_delta": 8000
+      },
+      {
+        "name": "Extra Egg",
+        "price_delta": 6000
+      }
+    ],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 15,
+      "discounted_price": 40800,
+      "label": "Happy Hour"
+    }
+  },
+  {
+    "id": "item_020",
+    "restaurant_id": "rest_003",
+    "category": "Ramen",
+    "name": "Tonkotsu Ramen",
+    "description": "Rich, creamy pork bone broth ramen simmered for hours for deep flavor.",
+    "price": 55000,
+    "tags": [
+      "best-seller",
+      "rich broth",
+      "contains pork"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Extra Chashu",
+        "price_delta": 12000
+      }
+    ]
+  },
+  {
+    "id": "item_021",
+    "restaurant_id": "rest_003",
+    "category": "Ramen",
+    "name": "Chicken Paitan Ramen",
+    "description": "Silky chicken bone broth ramen, lighter than pork-based versions.",
+    "price": 50000,
+    "tags": [
+      "halal-friendly",
+      "rich broth"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_022",
+    "restaurant_id": "rest_003",
+    "category": "Ramen",
+    "name": "Spicy Miso Ramen",
+    "description": "Fermented miso broth ramen with a fiery chili kick.",
+    "price": 52000,
+    "tags": [
+      "spicy",
+      "comfort food"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_023",
+    "restaurant_id": "rest_003",
+    "category": "Ramen",
+    "name": "Vegetable Ramen",
+    "description": "Light vegetable broth ramen loaded with seasonal greens and mushrooms.",
+    "price": 45000,
+    "tags": [
+      "vegetarian",
+      "light"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 20,
+      "discounted_price": 36000,
+      "label": "Early Bird"
+    }
+  },
+  {
+    "id": "item_024",
+    "restaurant_id": "rest_003",
+    "category": "Sides",
+    "name": "Gyoza (5pcs)",
+    "description": "Pan-fried pork dumplings with a crisp bottom and juicy filling.",
+    "price": 28000,
+    "tags": [
+      "contains pork",
+      "crispy"
+    ],
+    "available": false,
+    "variants": []
+  },
+  {
+    "id": "item_025",
+    "restaurant_id": "rest_003",
+    "category": "Sides",
+    "name": "Karaage Chicken",
+    "description": "Japanese-style fried chicken bites, crispy and well-seasoned.",
+    "price": 32000,
+    "tags": [
+      "halal-friendly",
+      "crispy",
+      "popular"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_026",
+    "restaurant_id": "rest_003",
+    "category": "Drinks",
+    "name": "Ocha (Green Tea)",
+    "description": "Traditional Japanese green tea, served hot or iced.",
+    "price": 12000,
+    "tags": [
+      "refreshing"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_027",
+    "restaurant_id": "rest_003",
+    "category": "Drinks",
+    "name": "Ramune Soda",
+    "description": "Classic Japanese carbonated soda in a marble-stopped bottle.",
+    "price": 18000,
+    "tags": [
+      "sweet",
+      "fizzy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_028",
+    "restaurant_id": "rest_004",
+    "category": "Sushi & Sashimi",
+    "name": "Salmon Sashimi (5pcs)",
+    "description": "Fresh, thickly sliced salmon sashimi served chilled.",
+    "price": 65000,
+    "tags": [
+      "best-seller",
+      "contains raw fish",
+      "premium"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_029",
+    "restaurant_id": "rest_004",
+    "category": "Sushi & Sashimi",
+    "name": "Tuna Nigiri Set (6pcs)",
+    "description": "Hand-pressed tuna nigiri set with seasoned sushi rice.",
+    "price": 70000,
+    "tags": [
+      "best-seller",
+      "contains raw fish",
+      "premium"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_030",
+    "restaurant_id": "rest_004",
+    "category": "Sushi & Sashimi",
+    "name": "California Roll",
+    "description": "Crab, avocado, and cucumber roll wrapped in nori and rice.",
+    "price": 45000,
+    "tags": [
+      "popular",
+      "contains shellfish"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_031",
+    "restaurant_id": "rest_004",
+    "category": "Sets",
+    "name": "Unagi Don",
+    "description": "Grilled freshwater eel glazed in sweet soy sauce over steamed rice.",
+    "price": 85000,
+    "tags": [
+      "premium",
+      "heavy"
+    ],
+    "available": false,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 25,
+      "discounted_price": 63750,
+      "label": "Member Price"
+    }
+  },
+  {
+    "id": "item_032",
+    "restaurant_id": "rest_004",
+    "category": "Sets",
+    "name": "Bento Box Teriyaki Chicken",
+    "description": "Grilled teriyaki chicken set with rice, salad, and side dishes.",
+    "price": 78000,
+    "tags": [
+      "business lunch",
+      "halal-friendly"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Upgrade to Salmon",
+        "price_delta": 15000
+      }
+    ]
+  },
+  {
+    "id": "item_033",
+    "restaurant_id": "rest_004",
+    "category": "Sets",
+    "name": "Chirashi Don",
+    "description": "Assorted fresh sashimi artfully arranged over seasoned sushi rice.",
+    "price": 95000,
+    "tags": [
+      "premium",
+      "contains raw fish"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_034",
+    "restaurant_id": "rest_004",
+    "category": "Sets",
+    "name": "Miso Soup",
+    "description": "Traditional soybean paste soup with tofu and seaweed.",
+    "price": 18000,
+    "tags": [
+      "light",
+      "vegetarian"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_035",
+    "restaurant_id": "rest_004",
+    "category": "Drinks",
+    "name": "Iced Genmaicha",
+    "description": "Roasted brown rice green tea served chilled.",
+    "price": 22000,
+    "tags": [
+      "refreshing"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_036",
+    "restaurant_id": "rest_004",
+    "category": "Drinks",
+    "name": "Hot Sencha",
+    "description": "Delicate Japanese green tea served hot.",
+    "price": 18000,
+    "tags": [
+      "light"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 30,
+      "discounted_price": 12600,
+      "label": "Daily Special"
+    }
+  },
+  {
+    "id": "item_037",
+    "restaurant_id": "rest_005",
+    "category": "Burgers",
+    "name": "Classic Cheeseburger",
+    "description": "Juicy beef patty with melted cheddar, lettuce, and house sauce.",
+    "price": 42000,
+    "tags": [
+      "best-seller",
+      "comfort food"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Add Bacon",
+        "price_delta": 8000
+      },
+      {
+        "name": "Make it Double",
+        "price_delta": 15000
+      }
+    ]
+  },
+  {
+    "id": "item_038",
+    "restaurant_id": "rest_005",
+    "category": "Burgers",
+    "name": "Double Smash Burger",
+    "description": "Two thin smash-pressed patties stacked with cheese and pickles.",
+    "price": 58000,
+    "tags": [
+      "best-seller",
+      "heavy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_039",
+    "restaurant_id": "rest_005",
+    "category": "Burgers",
+    "name": "Crispy Chicken Burger",
+    "description": "Crunchy fried chicken thigh with slaw and spicy mayo.",
+    "price": 45000,
+    "tags": [
+      "crispy",
+      "popular"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_040",
+    "restaurant_id": "rest_005",
+    "category": "Burgers",
+    "name": "BBQ Bacon Burger",
+    "description": "Beef patty topped with crispy bacon and smoky BBQ sauce.",
+    "price": 55000,
+    "tags": [
+      "contains pork",
+      "smoky"
+    ],
+    "available": false,
+    "variants": []
+  },
+  {
+    "id": "item_041",
+    "restaurant_id": "rest_005",
+    "category": "Burgers",
+    "name": "Veggie Burger",
+    "description": "Plant-based patty with fresh greens and tangy house sauce.",
+    "price": 48000,
+    "tags": [
+      "vegetarian",
+      "plant-based"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_042",
+    "restaurant_id": "rest_005",
+    "category": "Sides",
+    "name": "French Fries",
+    "description": "Classic crispy golden fries, lightly salted.",
+    "price": 22000,
+    "tags": [
+      "vegetarian",
+      "snack"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_043",
+    "restaurant_id": "rest_005",
+    "category": "Sides",
+    "name": "Onion Rings",
+    "description": "Battered and fried onion rings with a crunchy coating.",
+    "price": 25000,
+    "tags": [
+      "vegetarian",
+      "crispy"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 15,
+      "discounted_price": 21250,
+      "label": "Combo Deal"
+    }
+  },
+  {
+    "id": "item_044",
+    "restaurant_id": "rest_005",
+    "category": "Drinks",
+    "name": "Chocolate Milkshake",
+    "description": "Thick and creamy chocolate milkshake topped with whipped cream.",
+    "price": 28000,
+    "tags": [
+      "sweet",
+      "dessert-like"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_045",
+    "restaurant_id": "rest_005",
+    "category": "Drinks",
+    "name": "Cola Float",
+    "description": "Cold cola poured over a scoop of vanilla ice cream.",
+    "price": 25000,
+    "tags": [
+      "sweet",
+      "fizzy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_046",
+    "restaurant_id": "rest_006",
+    "category": "Salads",
+    "name": "Quinoa Power Bowl",
+    "description": "Quinoa with roasted vegetables and grilled chicken over mixed greens.",
+    "price": 52000,
+    "tags": [
+      "best-seller",
+      "healthy options",
+      "gluten-free"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Add Avocado",
+        "price_delta": 7000
+      },
+      {
+        "name": "Add Extra Chicken",
+        "price_delta": 10000
+      }
+    ]
+  },
+  {
+    "id": "item_047",
+    "restaurant_id": "rest_006",
+    "category": "Salads",
+    "name": "Caesar Salad",
+    "description": "Crisp romaine with parmesan, croutons, and grilled chicken in Caesar dressing.",
+    "price": 48000,
+    "tags": [
+      "best-seller",
+      "healthy options"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_048",
+    "restaurant_id": "rest_006",
+    "category": "Salads",
+    "name": "Vegan Buddha Bowl",
+    "description": "Mixed grains, roasted vegetables, and chickpeas with tahini dressing.",
+    "price": 50000,
+    "tags": [
+      "vegan",
+      "healthy options",
+      "gluten-free"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_049",
+    "restaurant_id": "rest_006",
+    "category": "Salads",
+    "name": "Grilled Salmon Salad",
+    "description": "Mixed greens topped with a generous portion of grilled salmon.",
+    "price": 68000,
+    "tags": [
+      "healthy options",
+      "high protein"
+    ],
+    "available": false,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 20,
+      "discounted_price": 54400,
+      "label": "Limited Time"
+    }
+  },
+  {
+    "id": "item_050",
+    "restaurant_id": "rest_006",
+    "category": "Wraps",
+    "name": "Chicken Avocado Wrap",
+    "description": "Whole wheat wrap filled with grilled chicken, avocado, and fresh greens.",
+    "price": 45000,
+    "tags": [
+      "healthy options",
+      "popular"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_051",
+    "restaurant_id": "rest_006",
+    "category": "Wraps",
+    "name": "Falafel Wrap",
+    "description": "Crispy chickpea falafel wrapped with fresh vegetables and tahini sauce.",
+    "price": 42000,
+    "tags": [
+      "vegetarian",
+      "healthy options"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_052",
+    "restaurant_id": "rest_006",
+    "category": "Smoothies",
+    "name": "Green Detox Smoothie",
+    "description": "Spinach, apple, and ginger blended into a refreshing detox smoothie.",
+    "price": 32000,
+    "tags": [
+      "healthy options",
+      "low sugar"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_053",
+    "restaurant_id": "rest_006",
+    "category": "Smoothies",
+    "name": "Berry Protein Smoothie",
+    "description": "Mixed berries blended with protein powder for a post-workout boost.",
+    "price": 35000,
+    "tags": [
+      "healthy options",
+      "high protein"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_054",
+    "restaurant_id": "rest_006",
+    "category": "Smoothies",
+    "name": "Mango Coconut Smoothie",
+    "description": "Tropical mango and coconut blended into a creamy smoothie.",
+    "price": 30000,
+    "tags": [
+      "refreshing",
+      "healthy options"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_055",
+    "restaurant_id": "rest_007",
+    "category": "Mains",
+    "name": "Mie Pangsit Babi",
+    "description": "Egg noodles tossed in savory sauce, topped with pork wonton.",
+    "price": 35000,
+    "tags": [
+      "best-seller",
+      "contains pork"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_056",
+    "restaurant_id": "rest_007",
+    "category": "Mains",
+    "name": "Nasi Ayam Hainan",
+    "description": "Hainanese-style poached chicken over fragrant rice with chili sauce.",
+    "price": 38000,
+    "tags": [
+      "best-seller",
+      "comfort food"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 25,
+      "discounted_price": 28500,
+      "label": "Grand Opening"
+    }
+  },
+  {
+    "id": "item_057",
+    "restaurant_id": "rest_007",
+    "category": "Mains",
+    "name": "Bakmi Ayam Jamur",
+    "description": "Springy egg noodles with seasoned chicken and mushroom toppings.",
+    "price": 32000,
+    "tags": [
+      "comfort food"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_058",
+    "restaurant_id": "rest_007",
+    "category": "Mains",
+    "name": "Capcay Seafood",
+    "description": "Mixed vegetables stir-fried with shrimp and squid in light sauce.",
+    "price": 45000,
+    "tags": [
+      "contains shellfish",
+      "family portions"
+    ],
+    "available": false,
+    "variants": []
+  },
+  {
+    "id": "item_059",
+    "restaurant_id": "rest_007",
+    "category": "Mains",
+    "name": "Kwetiau Goreng",
+    "description": "Fried flat rice noodles with egg, vegetables, and savory dark soy sauce.",
+    "price": 36000,
+    "tags": [
+      "popular",
+      "heavy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_060",
+    "restaurant_id": "rest_007",
+    "category": "Soups",
+    "name": "Sup Buntut",
+    "description": "Hearty oxtail soup simmered until tender with vegetables.",
+    "price": 55000,
+    "tags": [
+      "heavy",
+      "comfort food"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_061",
+    "restaurant_id": "rest_007",
+    "category": "Soups",
+    "name": "Sup Asparagus Kepiting",
+    "description": "Light, silky asparagus soup with shredded crab meat.",
+    "price": 40000,
+    "tags": [
+      "contains shellfish",
+      "light"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_062",
+    "restaurant_id": "rest_007",
+    "category": "Drinks",
+    "name": "Es Lidah Buaya",
+    "description": "Chilled aloe vera drink with a subtly sweet, refreshing taste.",
+    "price": 15000,
+    "tags": [
+      "refreshing"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 30,
+      "discounted_price": 10500,
+      "label": "App Exclusive"
+    }
+  },
+  {
+    "id": "item_063",
+    "restaurant_id": "rest_007",
+    "category": "Drinks",
+    "name": "Teh Tarik",
+    "description": "Frothy pulled milk tea, sweet and well-blended.",
+    "price": 16000,
+    "tags": [
+      "sweet"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_064",
+    "restaurant_id": "rest_008",
+    "category": "Curries",
+    "name": "Butter Chicken",
+    "description": "Tender chicken simmered in a creamy, mildly spiced tomato gravy.",
+    "price": 55000,
+    "tags": [
+      "best-seller",
+      "halal",
+      "mild spicy"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Add Naan",
+        "price_delta": 15000
+      }
+    ]
+  },
+  {
+    "id": "item_065",
+    "restaurant_id": "rest_008",
+    "category": "Curries",
+    "name": "Chicken Tikka Masala",
+    "description": "Char-grilled spiced chicken in a robust, fiery masala sauce.",
+    "price": 52000,
+    "tags": [
+      "best-seller",
+      "halal",
+      "spicy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_066",
+    "restaurant_id": "rest_008",
+    "category": "Curries",
+    "name": "Paneer Butter Masala",
+    "description": "Soft cottage cheese cubes in a rich, buttery tomato curry.",
+    "price": 48000,
+    "tags": [
+      "vegetarian",
+      "halal"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_067",
+    "restaurant_id": "rest_008",
+    "category": "Curries",
+    "name": "Lamb Rogan Josh",
+    "description": "Slow-cooked lamb in a deeply aromatic Kashmiri spice gravy.",
+    "price": 68000,
+    "tags": [
+      "halal",
+      "spicy",
+      "heavy"
+    ],
+    "available": false,
+    "variants": []
+  },
+  {
+    "id": "item_068",
+    "restaurant_id": "rest_008",
+    "category": "Curries",
+    "name": "Dal Makhani",
+    "description": "Creamy black lentils slow-simmered with butter and mild spices.",
+    "price": 38000,
+    "tags": [
+      "vegetarian",
+      "halal"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_069",
+    "restaurant_id": "rest_008",
+    "category": "Breads & Rice",
+    "name": "Garlic Naan",
+    "description": "Soft tandoor-baked flatbread brushed with garlic butter.",
+    "price": 22000,
+    "tags": [
+      "halal",
+      "vegetarian"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 15,
+      "discounted_price": 18700,
+      "label": "Seasonal"
+    }
+  },
+  {
+    "id": "item_070",
+    "restaurant_id": "rest_008",
+    "category": "Breads & Rice",
+    "name": "Biryani Rice (Chicken)",
+    "description": "Fragrant spiced basmati rice layered with tender chicken pieces.",
+    "price": 50000,
+    "tags": [
+      "halal",
+      "spicy",
+      "heavy"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_071",
+    "restaurant_id": "rest_008",
+    "category": "Drinks",
+    "name": "Mango Lassi",
+    "description": "Chilled yogurt drink blended with sweet ripe mango.",
+    "price": 25000,
+    "tags": [
+      "halal",
+      "sweet",
+      "refreshing"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_072",
+    "restaurant_id": "rest_008",
+    "category": "Drinks",
+    "name": "Masala Chai",
+    "description": "Spiced milk tea simmered with cardamom, cinnamon, and clove.",
+    "price": 18000,
+    "tags": [
+      "halal",
+      "warm"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_073",
+    "restaurant_id": "rest_009",
+    "category": "BBQ Sets",
+    "name": "Samgyeopsal Set (Pork Belly)",
+    "description": "Thick-cut pork belly grilled tableside with lettuce wraps and sauces.",
+    "price": 85000,
+    "tags": [
+      "best-seller",
+      "contains pork",
+      "group dining"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Add Extra Meat (200g)",
+        "price_delta": 35000
+      }
+    ]
+  },
+  {
+    "id": "item_074",
+    "restaurant_id": "rest_009",
+    "category": "BBQ Sets",
+    "name": "Bulgogi Beef Set",
+    "description": "Sweet soy-marinated grilled beef served with rice and banchan.",
+    "price": 95000,
+    "tags": [
+      "best-seller",
+      "group dining"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_075",
+    "restaurant_id": "rest_009",
+    "category": "BBQ Sets",
+    "name": "Spicy Chicken Galbi",
+    "description": "Grilled chicken thighs coated in a spicy gochujang glaze.",
+    "price": 65000,
+    "tags": [
+      "spicy",
+      "popular"
+    ],
+    "available": false,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 20,
+      "discounted_price": 52000,
+      "label": "Festival Deal"
+    }
+  },
+  {
+    "id": "item_076",
+    "restaurant_id": "rest_009",
+    "category": "BBQ Sets",
+    "name": "Kimchi Jjigae",
+    "description": "Bubbling kimchi stew with tofu, pork, and a deep fermented spice.",
+    "price": 45000,
+    "tags": [
+      "spicy",
+      "comfort food"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_077",
+    "restaurant_id": "rest_009",
+    "category": "BBQ Sets",
+    "name": "Bibimbap",
+    "description": "Mixed rice bowl with seasoned vegetables, egg, and chili paste.",
+    "price": 50000,
+    "tags": [
+      "popular",
+      "customizable"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_078",
+    "restaurant_id": "rest_009",
+    "category": "Sides (Banchan)",
+    "name": "Kimchi (Side)",
+    "description": "Classic fermented cabbage with a tangy, spicy kick.",
+    "price": 12000,
+    "tags": [
+      "spicy",
+      "vegetarian"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_079",
+    "restaurant_id": "rest_009",
+    "category": "Sides (Banchan)",
+    "name": "Japchae",
+    "description": "Stir-fried glass noodles with vegetables in a lightly sweet sesame sauce.",
+    "price": 35000,
+    "tags": [
+      "vegetarian option",
+      "popular"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_080",
+    "restaurant_id": "rest_009",
+    "category": "Drinks",
+    "name": "Korean Iced Tea (Yuja)",
+    "description": "Citron-based iced tea, tangy and lightly sweet.",
+    "price": 22000,
+    "tags": [
+      "refreshing",
+      "sweet"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_081",
+    "restaurant_id": "rest_009",
+    "category": "Drinks",
+    "name": "Soju Cocktail (Non-Alcoholic Mocktail)",
+    "description": "Fruity mocktail inspired by classic soju cocktails, alcohol-free.",
+    "price": 28000,
+    "tags": [
+      "refreshing",
+      "mocktail"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 25,
+      "discounted_price": 21000,
+      "label": "Midnight Special"
+    }
+  },
+  {
+    "id": "item_082",
+    "restaurant_id": "rest_010",
+    "category": "Breakfast",
+    "name": "Nasi Goreng Kampung",
+    "description": "Village-style fried rice with anchovies, egg, and a touch of spice.",
+    "price": 32000,
+    "tags": [
+      "best-seller",
+      "halal",
+      "comfort food"
+    ],
+    "available": true,
+    "variants": [
+      {
+        "name": "Add Fried Egg",
+        "price_delta": 5000
+      },
+      {
+        "name": "Add Sausage",
+        "price_delta": 8000
+      }
+    ]
+  },
+  {
+    "id": "item_083",
+    "restaurant_id": "rest_010",
+    "category": "Breakfast",
+    "name": "Avocado Toast",
+    "description": "Smashed avocado on toasted sourdough with chili flakes and lime.",
+    "price": 35000,
+    "tags": [
+      "best-seller",
+      "vegetarian",
+      "healthy options"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_084",
+    "restaurant_id": "rest_010",
+    "category": "Breakfast",
+    "name": "Eggs Benedict",
+    "description": "Poached eggs and ham on English muffin, topped with hollandaise sauce.",
+    "price": 42000,
+    "tags": [
+      "halal",
+      "brunch"
+    ],
+    "available": false,
+    "variants": []
+  },
+  {
+    "id": "item_085",
+    "restaurant_id": "rest_010",
+    "category": "Breakfast",
+    "name": "Pancake Stack",
+    "description": "Fluffy stacked pancakes drizzled with butter and maple syrup.",
+    "price": 38000,
+    "tags": [
+      "sweet",
+      "vegetarian"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_086",
+    "restaurant_id": "rest_010",
+    "category": "Breakfast",
+    "name": "Croissant Sandwich",
+    "description": "Buttery croissant filled with ham and melted cheese.",
+    "price": 30000,
+    "tags": [
+      "contains pork option",
+      "popular"
+    ],
+    "available": true,
+    "variants": [],
+    "promo": {
+      "type": "discount",
+      "discount_percent": 30,
+      "discounted_price": 21000,
+      "label": "Morning Boost"
+    }
+  },
+  {
+    "id": "item_087",
+    "restaurant_id": "rest_010",
+    "category": "Dessert",
+    "name": "Molten Chocolate Lava Cake",
+    "description": "Warm chocolate cake with a gooey molten center, served with ice cream.",
+    "price": 35000,
+    "tags": [
+      "sweet",
+      "dessert",
+      "contains nuts"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_088",
+    "restaurant_id": "rest_010",
+    "category": "Dessert",
+    "name": "Cheesecake Slice",
+    "description": "Creamy baked cheesecake with a buttery biscuit base.",
+    "price": 32000,
+    "tags": [
+      "sweet",
+      "dessert"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_089",
+    "restaurant_id": "rest_010",
+    "category": "Coffee & Drinks",
+    "name": "Es Kopi Susu Gula Aren",
+    "description": "Iced milk coffee sweetened with rich palm sugar syrup.",
+    "price": 25000,
+    "tags": [
+      "halal",
+      "caffeine",
+      "popular"
+    ],
+    "available": true,
+    "variants": []
+  },
+  {
+    "id": "item_090",
+    "restaurant_id": "rest_010",
+    "category": "Coffee & Drinks",
+    "name": "Matcha Latte",
+    "description": "Smooth matcha green tea blended with milk, served hot or iced.",
+    "price": 28000,
+    "tags": [
+      "halal",
+      "low sugar option"
+    ],
+    "available": true,
+    "variants": []
+  }
+]

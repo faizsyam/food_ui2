@@ -1,0 +1,162 @@
+[
+  {
+    "id": "rest_001",
+    "name": "Warung Bu Tini",
+    "cuisine": "Indonesian",
+    "location": {
+      "address": "Jl. Tebet Raya No. 45, Tebet, Jakarta Selatan",
+      "lat": -6.2253,
+      "lng": 106.8503
+    },
+    "rating": 4.3,
+    "delivery_time_minutes": 25,
+    "delivery_fee": 5000,
+    "min_order": 25000,
+    "is_open": true,
+    "tags": ["budget-friendly", "halal", "home-style", "warung", "family portions", "fast service"]
+  },
+  {
+    "id": "rest_002",
+    "name": "Kayu & Bara Dapur Nusantara",
+    "cuisine": "Indonesian",
+    "location": {
+      "address": "Jl. Kemang Raya No. 12, Kemang, Jakarta Selatan",
+      "lat": -6.2607,
+      "lng": 106.8133
+    },
+    "rating": 4.6,
+    "delivery_time_minutes": 35,
+    "delivery_fee": 12000,
+    "min_order": 50000,
+    "is_open": true,
+    "tags": ["modern indonesian", "halal", "premium", "instagrammable", "date night", "spicy options"]
+  },
+  {
+    "id": "rest_003",
+    "name": "Ramen Hachi",
+    "cuisine": "Japanese",
+    "location": {
+      "address": "Jl. Senopati No. 33, Senopati, Jakarta Selatan",
+      "lat": -6.2275,
+      "lng": 106.8067
+    },
+    "rating": 4.5,
+    "delivery_time_minutes": 30,
+    "delivery_fee": 10000,
+    "min_order": 40000,
+    "is_open": true,
+    "tags": ["ramen", "comfort food", "rich broth", "late night", "popular with students", "halal-friendly options"]
+  },
+  {
+    "id": "rest_004",
+    "name": "Sakura Sushi & Teppan",
+    "cuisine": "Japanese",
+    "location": {
+      "address": "SCBD Lot 8, Jl. Jend. Sudirman, Jakarta Selatan",
+      "lat": -6.2241,
+      "lng": 106.8090
+    },
+    "rating": 4.7,
+    "delivery_time_minutes": 40,
+    "delivery_fee": 15000,
+    "min_order": 75000,
+    "is_open": true,
+    "tags": ["premium", "sushi", "business lunch", "fresh seafood", "set meals", "contains raw fish"]
+  },
+  {
+    "id": "rest_005",
+    "name": "Patty Union Burgers",
+    "cuisine": "Western",
+    "location": {
+      "address": "Jl. Kemang Selatan VIII No. 9, Jakarta Selatan",
+      "lat": -6.2655,
+      "lng": 106.8155
+    },
+    "rating": 4.2,
+    "delivery_time_minutes": 20,
+    "delivery_fee": 8000,
+    "min_order": 30000,
+    "is_open": true,
+    "tags": ["burgers", "fast casual", "budget-friendly", "comfort food", "open late"]
+  },
+  {
+    "id": "rest_006",
+    "name": "The Green Bowl Co.",
+    "cuisine": "Western",
+    "location": {
+      "address": "Jl. Senopati Raya No. 21, Jakarta Selatan",
+      "lat": -6.2290,
+      "lng": 106.8085
+    },
+    "rating": 4.4,
+    "delivery_time_minutes": 25,
+    "delivery_fee": 10000,
+    "min_order": 35000,
+    "is_open": true,
+    "tags": ["healthy options", "vegetarian-friendly", "low calorie", "salads", "smoothies", "gluten-free options"]
+  },
+  {
+    "id": "rest_007",
+    "name": "Kedai Peranakan Encim",
+    "cuisine": "Chinese-Peranakan",
+    "location": {
+      "address": "Jl. Pluit Raya No. 88, Pluit, Jakarta Utara",
+      "lat": -6.1235,
+      "lng": 106.7920
+    },
+    "rating": 4.5,
+    "delivery_time_minutes": 35,
+    "delivery_fee": 9000,
+    "min_order": 40000,
+    "is_open": false,
+    "tags": ["peranakan", "chinese-indonesian", "family portions", "comfort food", "rich flavors", "contains pork options"]
+  },
+  {
+    "id": "rest_008",
+    "name": "Bombay Spice Kitchen",
+    "cuisine": "Indian",
+    "location": {
+      "address": "Jl. Melawai Raya No. 5, Blok M, Jakarta Selatan",
+      "lat": -6.2440,
+      "lng": 106.8010
+    },
+    "rating": 4.6,
+    "delivery_time_minutes": 30,
+    "delivery_fee": 9000,
+    "min_order": 35000,
+    "is_open": true,
+    "tags": ["halal", "indian", "spicy", "vegetarian options", "curry", "naan", "family portions"]
+  },
+  {
+    "id": "rest_009",
+    "name": "Seoul Garden BBQ House",
+    "cuisine": "Korean",
+    "location": {
+      "address": "Jl. Gandaria Tengah III No. 7, Jakarta Selatan",
+      "lat": -6.2438,
+      "lng": 106.7855
+    },
+    "rating": 4.4,
+    "delivery_time_minutes": 35,
+    "delivery_fee": 11000,
+    "min_order": 50000,
+    "is_open": true,
+    "tags": ["korean bbq", "spicy", "group dining", "trendy", "grilled", "contains pork options"]
+  },
+  {
+    "id": "rest_010",
+    "name": "Pagi Pagi All-Day Breakfast & Dessert Bar",
+    "cuisine": "Cafe",
+    "location": {
+      "address": "Jl. Cipete Raya No. 18, Jakarta Selatan",
+      "lat": -6.2710,
+      "lng": 106.7995
+    },
+    "rating": 4.3,
+    "delivery_time_minutes": 20,
+    "delivery_fee": 7000,
+    "min_order": 25000,
+    "is_open": true,
+    "tags": ["all-day breakfast", "dessert", "coffee", "brunch spot", "halal", "instagrammable", "light bites"]
+  }
+]
