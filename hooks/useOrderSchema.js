@@ -7,6 +7,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 import schemaReducer from '../lib/schemaReducer';
+import { getCachedSchema, saveCachedSchema } from '../lib/recentRequests';
 
 /**
  * @param {Array} restaurants — full restaurants array (for potential future use)
@@ -30,7 +31,7 @@ export default function useOrderSchema(restaurants, menus) {
   }, []);
 
   //
-  // submitRequest — POST to AI agent and set the returned schema
+  // submitRequest — POST to AI agent (or load from cache) and set the returned schema
   //
   const submitRequest = useCallback(async (userRequestString) => {
     if (!userRequestString || !userRequestString.trim()) {
@@ -44,6 +45,14 @@ export default function useOrderSchema(restaurants, menus) {
     }
 
     lastRequestRef.current = userRequestString;
+
+    // Check local cache before hitting the AI
+    const cached = getCachedSchema(userRequestString);
+    if (cached) {
+      setSchema(cached);
+      setError(null);
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
@@ -82,6 +91,7 @@ export default function useOrderSchema(restaurants, menus) {
       }
 
       setSchema(data.schema);
+      saveCachedSchema(userRequestString, data.schema);
     } catch (err) {
       setError(err.message || 'An unexpected error occurred');
     } finally {
