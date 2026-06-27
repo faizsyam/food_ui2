@@ -1,6 +1,22 @@
 import React, { useState, useMemo } from 'react';
 import { formatIDR } from '../../lib/format';
 
+function ItemImage({ itemId, className = '' }) {
+  const [hasError, setHasError] = useState(false);
+  return (
+    <div className={`overflow-hidden bg-[#F0E8E2] ${className}`}>
+      {!hasError && itemId && (
+        <img
+          src={`/${itemId}.webp`}
+          alt=""
+          onError={() => setHasError(true)}
+          className="w-full h-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
 export default function ItemBrowser({
   restaurantId,
   restaurantName,
@@ -98,7 +114,8 @@ export default function ItemBrowser({
                       : item.price;
                     return (
                       <div key={item.id} className="flex items-start justify-between py-2">
-                        <div className="flex-1 min-w-0">
+                        <ItemImage itemId={item.id} className="w-16 aspect-square rounded-md object-cover shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0 ml-3">
                           <p className="text-[14px] font-medium text-[#111111]">{item.name}</p>
                           {item.description && (
                             <p className="text-[13px] text-[#6B6B67] line-clamp-2">{item.description}</p>
@@ -151,7 +168,8 @@ export default function ItemBrowser({
                   })}
                   {items.unavailable.map((item) => (
                     <div key={item.id} className="flex items-start justify-between py-2 opacity-50">
-                      <div className="flex-1 min-w-0">
+                      <ItemImage itemId={item.id} className="w-16 aspect-square rounded-md object-cover shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0 ml-3">
                         <p className="text-[14px] font-medium text-[#111111] line-through">{item.name}</p>
                       </div>
                       <span className="text-[12px] text-[#9A9A96]">Unavailable</span>

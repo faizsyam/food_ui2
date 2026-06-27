@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import { Plus, ShoppingCart, ChevronDown, ChevronUp, User, Store } from 'lucide-react';
 import { formatIDR } from '../../lib/format';
 
+function ItemImage({ itemId, className = '' }) {
+  const [hasError, setHasError] = useState(false);
+  return (
+    <div className={`overflow-hidden bg-[#F0E8E2] ${className}`}>
+      {!hasError && itemId && (
+        <img
+          src={`/${itemId}.webp`}
+          alt=""
+          onError={() => setHasError(true)}
+          className="w-full h-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
 function AddToOrderButton({ onClick, label, small }) {
   return (
     <button
@@ -112,7 +128,8 @@ function SubGroupSection({ sub, onAddItemToOrder }) {
               key={item.item_id || item.id}
               className="flex items-start justify-between py-2 border-b border-[#F7F7F5] last:border-b-0"
             >
-              <div className="flex-1 min-w-0">
+              <ItemImage itemId={item.item_id || item.id} className="w-16 aspect-square rounded-md object-cover shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0 ml-3">
                 <span className="text-[14px] text-[#111111]">{item.name}</span>
                 {item.variant && <span className="text-[12px] text-[#6B6B67] ml-2">({item.variant})</span>}
                 <p className="text-[13px] text-[#6B6B67]">

@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import { Trash2, ShoppingCart } from 'lucide-react';
 import { formatIDR } from '../../lib/format';
 
+function ItemImage({ itemId, className = '' }) {
+  const [hasError, setHasError] = useState(false);
+  return (
+    <div className={`overflow-hidden bg-[#F0E8E2] ${className}`}>
+      {!hasError && itemId && (
+        <img
+          src={`/${itemId}.webp`}
+          alt=""
+          onError={() => setHasError(true)}
+          className="w-full h-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
 export default function ItemRow({ item, quantity, selectedVariant, notes, onQuantityChange, onVariantChange, onRemove, onAddToOrder }) {
   if (!item) return null;
 
@@ -26,6 +42,7 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
   if (isUnavailable) {
     return (
       <div className="flex items-start gap-3 py-2 opacity-40">
+        <ItemImage itemId={item.id} className="w-20 aspect-square rounded-lg shrink-0" />
         <div className="flex-1 min-w-0">
           <span className="text-[14px] font-medium line-through text-[#1A120D]">{item.name}</span>
           <p className="text-[13px] text-[#5C4F48]"><span className="italic">Unavailable</span></p>
@@ -45,7 +62,8 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
   }
 
   return (
-    <div className="flex items-start gap-3 py-2.5 transition-opacity duration-150">
+    <div className="flex items-start gap-4 py-2.5 transition-opacity duration-150">
+      <ItemImage itemId={item.id} className="w-24 aspect-square rounded-lg shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[14px] font-semibold text-[#1A120D]">{item.name}</span>

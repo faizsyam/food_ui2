@@ -4,11 +4,44 @@ import PersonTag from './PersonTag';
 import ItemRow from './ItemRow';
 import { formatIDR } from '../../lib/format';
 
+function RestaurantImage({ id }) {
+  const [hasError, setHasError] = useState(false);
+  return (
+    <div className="w-full h-40 rounded-t-2xl bg-[#F0E8E2] overflow-hidden">
+      {!hasError && id && (
+        <img
+          src={`/${id}.webp`}
+          alt=""
+          onError={() => setHasError(true)}
+          className="w-full h-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
+function ItemImage({ itemId, className = '' }) {
+  const [hasError, setHasError] = useState(false);
+  return (
+    <div className={`overflow-hidden bg-[#F0E8E2] ${className}`}>
+      {!hasError && itemId && (
+        <img
+          src={`/${itemId}.webp`}
+          alt=""
+          onError={() => setHasError(true)}
+          className="w-full h-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
 function BrowseItemRow({ item, onAdd }) {
   const isUnavailable = item.available === false;
   if (isUnavailable) return null;
   return (
     <div className="flex items-center gap-3 py-2 hover:bg-[#FFF9F5] rounded-lg transition-colors cursor-pointer" onClick={onAdd}>
+      <ItemImage itemId={item.id} className="w-16 aspect-square rounded-md shrink-0" />
       <div className="flex-1 min-w-0">
         <span className="text-[14px] font-medium text-[#1A120D]">{item.name}</span>
         {item.description && (
@@ -117,8 +150,10 @@ export default function SlotCard({
       {selectedOption && (
         <div className="px-6 py-5">
           {/* Restaurant info card */}
-          <div className="bg-[#FFF9F5] rounded-2xl p-4 mb-4 border border-[#F0E8E2]">
-            <div className="flex items-start justify-between gap-3">
+          <div className="bg-[#FFF9F5] rounded-2xl overflow-hidden mb-4 border border-[#F0E8E2]">
+            <RestaurantImage id={selectedOption.restaurant?.id} />
+            <div className="p-4">
+              <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <h3 className="text-[16px] font-bold text-[#1A120D] leading-tight">
                   {selectedOption.restaurant?.name || 'Unknown Restaurant'}
@@ -156,6 +191,7 @@ export default function SlotCard({
                   <span className="truncate max-w-[200px]">{selectedOption.restaurant.location.address}</span>
                 </div>
               )}
+            </div>
             </div>
           </div>
 
