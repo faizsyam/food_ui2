@@ -36,6 +36,7 @@ export default function SlotCard({
   onVariantChange,
   onSelectOption,
   onAddOrderItem,
+  onAddItem,
 }) {
   const resolvedOptions = slot.resolvedOptions || [];
   const selectedOptionId = slot.selected_option_id;
@@ -97,14 +98,9 @@ export default function SlotCard({
 
   return (
     <div className="bg-white border border-[#EFEFED] rounded-xl overflow-hidden">
-      {/* Header with person info */}
-      <div className="px-5 pt-4 pb-2">
-        <PersonTag name={slot.person?.name} preferences={slot.person?.preferences} />
-      </div>
-
       {/* Option selector tabs */}
       {resolvedOptions.length > 1 && (
-        <div className="px-5 pb-3">
+        <div className="px-5 pt-4">
           <div className="flex flex-wrap gap-2">
             {resolvedOptions.map((opt) => (
               <button

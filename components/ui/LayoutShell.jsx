@@ -1,23 +1,26 @@
 import React, { useCallback } from 'react';
-import { User, Store } from 'lucide-react';
 import SlotCard from './SlotCard';
 import WarningBanner from './WarningBanner';
 import SharedRequirementsBar from './SharedRequirementsBar';
 import OrderSummaryPanel from './OrderSummaryPanel';
+import PersonTag from './PersonTag';
 
-function CollapsibleGroup({ title, emojiKey, children, defaultOpen = true }) {
+function CollapsibleGroup({ title, emojiKey, children, defaultOpen = true, label }) {
   const [open, setOpen] = React.useState(defaultOpen);
   return (
     <div className="bg-white rounded-xl border border-[#EFEFED] overflow-hidden mb-4">
       <button
         onClick={() => setOpen((p) => !p)}
-        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-[#F7F7F5] transition-colors"
+        className="w-full flex items-start gap-3 px-5 py-4 text-left hover:bg-[#F7F7F5] transition-colors"
       >
-        <div className="w-10 h-10 rounded-full bg-white border border-[#EFEFED] flex items-center justify-center text-[#6B6B67]">
+        <div className="w-10 h-10 rounded-full bg-white border border-[#EFEFED] flex items-center justify-center text-[#6B6B67] shrink-0 mt-0.5">
           <span className="text-xl leading-none">{emojiKey}</span>
         </div>
-        <span className="text-[15px] font-semibold text-[#111111] flex-1">{title}</span>
-        <span className="text-[13px] text-[#9A9A96]">{open ? 'Hide' : 'Show'}</span>
+        <div className="flex-1 min-w-0">
+          <span className="text-[15px] font-semibold text-[#111111] block">{title}</span>
+          <div className="flex flex-wrap gap-1.5 mt-1.5">{label}</div>
+        </div>
+        <span className="text-[13px] text-[#9A9A96] shrink-0 mt-1">{open ? 'Hide' : 'Show'}</span>
       </button>
       {open && <div className="px-5 pb-5 space-y-4">{children}</div>}
     </div>
@@ -51,21 +54,16 @@ export default function LayoutShell({
     return 0;
   });
 
-  // Group slots
+  // Left section always groups by person at the top level
   function buildGroups() {
-    if (groupingStrategy === 'by_restaurant') {
-      const byRestaurant = {};
-      for (const slot of slots) {
-        const opt = (slot.resolvedOptions || slot.options || []).find((o) => o.option_id === slot.selected_option_id);
-        const id = opt?.restaurant_id || opt?.restaurant?.id || 'other';
-        if (!byRestaurant[id]) byRestaurant[id] = { title: opt?.restaurant?.name || id, emojiKey: '🍽️', slots: [] };
-        byRestaurant[id].slots.push(slot);
-      }
-      return Object.values(byRestaurant);
-    }
     const byPerson = [];
     for (const slot of slots) {
-      byPerson.push({ title: slot.person?.name || 'Unknown', emojiKey: '👤', slots: [slot] });
+      byPerson.push({
+        title: slot.person?.name || 'Unknown',
+        emojiKey: '👤',
+        slots: [slot],
+        preferences: slot.person?.preferences || {},
+      });
     }
     return byPerson;
   }
@@ -76,39 +74,15 @@ export default function LayoutShell({
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="mb-6">
           <div>
             <h1 className="text-xl font-semibold text-[#111111]">Your Meal Options</h1>
             <p className="text-[13px] text-[#6B6B67] mt-1">AI‑generated meal options for {slots.length} people</p>
           </div>
-          <div className="flex items-center gap-2 bg-white border border-[#EFEFED] rounded-lg p-1">
-            <button
-              onClick={() => onSetGrouping?.('by_person')}
-              className={`px-4 py-1.5 text-[13px] font-medium rounded-md transition-colors flex items-center gap-1 ${
-                groupingStrategy === 'by_person'
-                  ? 'bg-[#F7F7F5] text-[#111111] shadow-sm'
-                  : 'text-[#9A9A96] hover:text-[#111111]'
-              }`}
-            >
-              <User size={14} />
-              Person
-            </button>
-            <button
-              onClick={() => onSetGrouping?.('by_restaurant')}
-              className={`px-4 py-1.5 text-[13px] font-medium rounded-md transition-colors flex items-center gap-1 ${
-                groupingStrategy === 'by_restaurant'
-                  ? 'bg-[#F7F7F5] text-[#111111] shadow-sm'
-                  : 'text-[#9A9A96] hover:text-[#111111]'
-              }`}
-            >
-              <Store size={14} />
-              Restaurant
-            </button>
-          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left: Results */}
+          {/* Left: Results — always grouped by person */}
           <div className="flex-1 min-w-0">
             {shared_requirements.length > 0 && (
               <SharedRequirementsBar requirements={shared_requirements} warnings={warnings} />
@@ -129,13 +103,20 @@ export default function LayoutShell({
               </div>
             )}
 
-            {/* Grouped slots */}
+            {/* Grouped slots by person */}
             <div className="space-y-4">
               {groups.map((group, gi) => (
                 <CollapsibleGroup
                   key={gi}
                   title={group.title}
                   emojiKey={group.emojiKey}
+                  label={
+                    <PersonTag
+                      name={null}
+                      preferences={group.preferences}
+                      showPreferences={true}
+                    />
+                  }
                 >
                   {group.slots.map((slot) => (
                     <SlotCard
@@ -164,6 +145,8 @@ export default function LayoutShell({
                 onCheckout={onCheckout}
                 onRemoveOrderItem={onRemoveOrderItem}
                 onUpdateOrderItemQty={onUpdateOrderItemQty}
+                groupingStrategy={groupingStrategy}
+                onSetGrouping={onSetGrouping}
               />
             </div>
           </div>

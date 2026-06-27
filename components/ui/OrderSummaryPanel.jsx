@@ -1,5 +1,5 @@
-﻿import React, { useState } from "react"
-import { Copy, Check, Truck, Minus, Plus, Trash2, ShoppingCart } from "lucide-react"
+import React, { useState } from "react"
+import { Copy, Check, Truck, Minus, Plus, Trash2, ShoppingCart, User, Store, ChevronDown, ChevronUp } from "lucide-react"
 import { formatIDR } from "../../lib/format"
 
 function OrderItemRow({ item, onQtyChange, onRemove }) {
@@ -28,7 +28,8 @@ function OrderItemRow({ item, onQtyChange, onRemove }) {
   )
 }
 
-export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderItem, onUpdateOrderItemQty }) {
+export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderItem, onUpdateOrderItemQty, groupingStrategy = 'by_person', onSetGrouping }) {
+  const [openGroups, setOpenGroups] = useState(new Set())
   const [copied, setCopied] = useState(false)
 
   if (!schema) return null
@@ -41,8 +42,6 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
 
   const budgetLimit = (constraints.total_budget)
   const headcount = (constraints.headcount) || 0
-  const perPerson = budgetLimit && headcount > 0 ? budgetLimit / headcount : 0
-
   const grandTotal = (orderSummary.grand_total) || 0
   const breakdown = orderSummary.restaurant_breakdown || []
   const checkoutReady = (orderSummary.checkout_ready) || false
@@ -52,21 +51,44 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
   const over = budgetLimit ? grandTotal > budgetLimit : false
   const near = budgetLimit ? !over && progress >= 85 : false
 
-  const groupByRestaurant = () => {
+  const toggleGroup = (key) => {
+    setOpenGroups(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) {
+        next.delete(key)
+      } else {
+        next.add(key)
+      }
+      return next
+    })
+  }
+
+  const getGroups = () => {
+    if (groupingStrategy === 'by_person') {
+      const groups = {}
+      for (const it of items) {
+        const key = it.person_name || 'Unknown'
+        if (!groups[key]) {
+          groups[key] = { key, name: key, items: [], subtotal: 0 }
+        }
+        groups[key].items.push(it)
+        groups[key].subtotal += it.line_total || 0
+      }
+      return Object.values(groups)
+    }
+    // by restaurant
     const groups = {}
     for (const it of items) {
-      const rid = it.restaurant_id || "unknown"
+      const rid = it.restaurant_id || 'unknown'
       if (!groups[rid]) {
-        groups[rid] = {
-          rid, name: it.restaurant_name || "Unknown", items: [], subtotal: 0
-        }
+        groups[rid] = { key: rid, name: it.restaurant_name || 'Unknown', items: [], subtotal: 0 }
       }
       groups[rid].items.push(it)
       groups[rid].subtotal += it.line_total || 0
     }
     return Object.values(groups)
   }
-  const groups = isEmpty ? [] : groupByRestaurant()
+  const groups = isEmpty ? [] : getGroups()
 
   const handleCopy = () => {
     const lines = ["Order Summary"]
@@ -85,11 +107,38 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
   return (
     <div className="bg-white border border-[#EFEFED] rounded-xl overflow-hidden">
       <div className="p-5">
-        <h2 className="text-[17px] font-semibold text-[#111111]">Order Summary</h2>
+        {/* Title + grouping toggle */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-[17px] font-semibold text-[#111111]">Order Summary</h2>
+          <div className="flex items-center gap-1.5 bg-[#F7F7F5] border border-[#EFEFED] rounded-lg p-0.5">
+            <button
+              onClick={() => onSetGrouping?.('by_person')}
+              className={`px-3 py-1 text-[12px] font-medium rounded-md transition-colors flex items-center gap-1 ${
+                groupingStrategy === 'by_person'
+                  ? 'bg-white text-[#111111] shadow-sm'
+                  : 'text-[#9A9A96] hover:text-[#111111]'
+              }`}
+            >
+              <User size={12} />
+              Person
+            </button>
+            <button
+              onClick={() => onSetGrouping?.('by_restaurant')}
+              className={`px-3 py-1 text-[12px] font-medium rounded-md transition-colors flex items-center gap-1 ${
+                groupingStrategy === 'by_restaurant'
+                  ? 'bg-white text-[#111111] shadow-sm'
+                  : 'text-[#9A9A96] hover:text-[#111111]'
+              }`}
+            >
+              <Store size={12} />
+              Restaurant
+            </button>
+          </div>
+        </div>
 
         {/* Empty state */}
         {isEmpty && (
-          <div className="mt-6 text-center py-8">
+          <div className="mt-2 text-center py-8">
             <div className="w-12 h-12 bg-[#F7F7F5] rounded-full flex items-center justify-center mx-auto mb-3">
               <ShoppingCart size={24} className="text-[#9A9A96]" />
             </div>
@@ -98,38 +147,53 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
           </div>
         )}
 
-        {/* Order items grouped by restaurant */}
+        {/* Grouped items with expand/collapse */}
         {!isEmpty && (
-          <div className="mt-4 border border-[#EFEFED] rounded-lg overflow-hidden">
+          <div className="border border-[#EFEFED] rounded-lg overflow-hidden">
             {groups.map(g => {
-              const fee = breakdown.find(b => b.restaurant_id === g.rid)?.delivery_fee || 0
+              const isOpen = openGroups.has(g.key)
+              const isRestaurant = groupingStrategy === 'by_restaurant'
+              const fee = isRestaurant ? (breakdown.find(b => b.restaurant_id === g.key)?.delivery_fee || 0) : 0
+              const groupTotal = g.subtotal + fee
+
               return (
-                <div key={g.rid} className="border-b border-[#EFEFED] last:border-b-0">
-                  <div className="px-5 py-3 bg-[#F7F7F5]">
-                    <div className="flex items-center gap-1 text-[14px] font-semibold text-[#111111]">
-                      <Truck size={14} /> {g.name}
+                <div key={g.key} className="border-b border-[#EFEFED] last:border-b-0">
+                  <button onClick={() => toggleGroup(g.key)} className="w-full">
+                    <div className="flex items-center gap-3 px-5 py-3 text-left hover:bg-[#F7F7F5] transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-[#F7F7F5] border border-[#EFEFED] flex items-center justify-center">
+                        {isRestaurant ? <Truck size={14} className="text-[#6B6B67]" /> : <User size={14} className="text-[#6B6B67]" />}
+                      </div>
+                      <span className="text-[14px] font-semibold text-[#111111] flex-1">{g.name}</span>
+                      <span className="text-[13px] font-medium text-[#111111] tabular-nums">{formatIDR(groupTotal)}</span>
+                      {isOpen ? <ChevronUp size={14} className="text-[#9A9A96]" /> : <ChevronDown size={14} className="text-[#9A9A96]" />}
                     </div>
-                  </div>
-                  <div className="px-5">
-                    {g.items.map(it => (
-                      <OrderItemRow key={it.id} item={it} onQtyChange={onUpdateOrderItemQty} onRemove={onRemoveOrderItem} />
-                    ))}
-                  </div>
-                  <div className="px-5 py-2 flex justify-between text-[13px]">
-                    <span className="text-[#6B6B67]">Subtotal</span>
-                    <span className="text-[#111111] tabular-nums">{formatIDR(g.subtotal)}</span>
-                  </div>
-                  <div className="px-5 py-1 flex justify-between text-[13px]">
-                    <span className="text-[#6B6B67]">Delivery</span>
-                    <span className="text-[#111111] tabular-nums">{formatIDR(fee)}</span>
-                  </div>
+                  </button>
+                  {isOpen && (
+                    <div>
+                      <div className="px-5">
+                        {g.items.map(it => (
+                          <OrderItemRow key={it.id} item={it} onQtyChange={onUpdateOrderItemQty} onRemove={onRemoveOrderItem} />
+                        ))}
+                      </div>
+                      <div className="px-5 py-2 flex justify-between text-[13px]">
+                        <span className="text-[#6B6B67]">Subtotal</span>
+                        <span className="text-[#111111] tabular-nums">{formatIDR(g.subtotal)}</span>
+                      </div>
+                      {isRestaurant && (
+                        <div className="px-5 py-1 flex justify-between text-[13px]">
+                          <span className="text-[#6B6B67]">Delivery</span>
+                          <span className="text-[#111111] tabular-nums">{formatIDR(fee)}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )
             })}
-          </div>)
-        }
+          </div>
+        )}
 
-        {/* Price totals */}
+        {/* Grand total */}
         {!isEmpty && (
           <div className="mt-4 pt-4 border-t border-[#EFEFED]">
             <div className="flex justify-between text-[15px] font-bold">

@@ -18,26 +18,26 @@ function keyToPalette(key) {
   return PALETTE[Math.abs(hash) % PALETTE.length];
 }
 
-export default function PersonTag({ name, preferences }) {
+export default function PersonTag({ name, preferences, showPreferences = true }) {
   const prefEntries =
-    preferences && typeof preferences === 'object'
+    preferences && typeof preferences === 'object' && showPreferences
       ? Object.entries(preferences)
       : [];
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="text-[14px] font-semibold text-[#111111]">{
-        name || 'Unknown'
-      }</span>
+    <>
+      {name !== null && name !== undefined && (
+        <span className="text-[14px] font-semibold text-[#111111]">{name || 'Unknown'}</span>
+      )}
       {prefEntries.map(([key, value]) => (
         <span
           key={key}
-          className={`inline-flex items-center gap-1 border text-[12px] px-[10px] py-[3px] rounded-full font-medium leading-none ${keyToPalette(key)}`}
+          className={`inline-flex shrink-0 items-center gap-1 border text-[12px] px-[10px] py-[3px] rounded-full font-medium leading-none whitespace-nowrap ${keyToPalette(key)}`}
         >
           <span className="opacity-60 capitalize">{key}:</span>
           <span className="capitalize">{String(value)}</span>
         </span>
       ))}
-    </div>
+    </>
   );
 }
