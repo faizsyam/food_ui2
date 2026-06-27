@@ -7,8 +7,8 @@ export default function WarningBanner({ warning, onDismiss, onClick }) {
   const isBlocking = severity === 'blocking';
 
   const containerClass = isBlocking
-    ? 'bg-[#FEF2F2] border-[#FECACA] text-[#DC2626]'
-    : 'bg-[#FFFBEB] border-[#FDE68A] text-[#92400E]';
+    ? 'bg-[#FEF2F2] border-[#FECACA] text-[#E11D48]'
+    : 'bg-[#FFF9F5] border-[#F0E8E2] text-[#B45309]';
 
   const Icon = isBlocking ? AlertTriangle : Info;
 

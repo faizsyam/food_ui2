@@ -8,19 +8,19 @@ import PersonTag from './PersonTag';
 function CollapsibleGroup({ title, emojiKey, children, defaultOpen = true, label }) {
   const [open, setOpen] = React.useState(defaultOpen);
   return (
-    <div className="bg-white rounded-xl border border-[#EFEFED] overflow-hidden mb-4">
+    <div className="bg-white rounded-2xl border border-[#F0E8E2] overflow-hidden mb-4 shadow-card hover:shadow-card-hover transition-shadow duration-300">
       <button
         onClick={() => setOpen((p) => !p)}
-        className="w-full flex items-start gap-3 px-5 py-4 text-left hover:bg-[#F7F7F5] transition-colors"
+        className="w-full flex items-start gap-3 px-5 py-4 text-left hover:bg-[#FFF9F5] transition-colors duration-200"
       >
-        <div className="w-10 h-10 rounded-full bg-white border border-[#EFEFED] flex items-center justify-center text-[#6B6B67] shrink-0 mt-0.5">
+        <div className="w-10 h-10 rounded-full bg-[#FFF9F5] border border-[#F0E8E2] flex items-center justify-center text-[#9C8E84] shrink-0 mt-0.5">
           <span className="text-xl leading-none">{emojiKey}</span>
         </div>
         <div className="flex-1 min-w-0">
-          <span className="text-[15px] font-semibold text-[#111111] block">{title}</span>
+          <span className="text-[15px] font-bold text-[#1A120D] block">{title}</span>
           <div className="flex flex-wrap gap-1.5 mt-1.5">{label}</div>
         </div>
-        <span className="text-[13px] text-[#9A9A96] shrink-0 mt-1">{open ? 'Hide' : 'Show'}</span>
+        <span className="text-[13px] text-[#9C8E84] shrink-0 mt-1 font-medium">{open ? 'Hide' : 'Show'}</span>
       </button>
       {open && <div className="px-5 pb-5 space-y-4">{children}</div>}
     </div>
@@ -71,13 +71,13 @@ export default function LayoutShell({
   const groups = buildGroups();
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <div className="min-h-screen bg-[#FFF9F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
           <div>
-            <h1 className="text-xl font-semibold text-[#111111]">Your Meal Options</h1>
-            <p className="text-[13px] text-[#6B6B67] mt-1">AI‑generated meal options for {slots.length} people</p>
+            <h1 className="text-xl font-bold text-[#1A120D]">Your Meal Options</h1>
+            <p className="text-[13px] text-[#5C4F48] mt-1">AI-generated meal options for {slots.length} people</p>
           </div>
         </div>
 

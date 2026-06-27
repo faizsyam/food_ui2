@@ -1,12 +1,12 @@
 import React from 'react';
 
 const PALETTE = [
-  'bg-[#E3F2FD] text-[#1565C0] border-[#BBDEFB]',
-  'bg-[#E8F5E9] text-[#2E7D32] border-[#C8E6C9]',
-  'bg-[#FFF3E0] text-[#E65100] border-[#FFE0B2]',
-  'bg-[#F3E5F5] text-[#7B1FA2] border-[#E1BEE7]',
-  'bg-[#E0F2F1] text-[#00695C] border-[#B2DFDB]',
-  'bg-[#FBE9E7] text-[#BF360C] border-[#FFCCBC]',
+  'bg-[#FFF0EA] text-[#C0481A] border-[#E8521A]/20',
+  'bg-[#F0F9F4] text-[#198B4E] border-[#22C55E]/20',
+  'bg-[#EFF6FF] text-[#2563EB] border-[#3B82F6]/20',
+  'bg-[#F6F3FF] text-[#7C3AED] border-[#8B5CF6]/20',
+  'bg-[#FFF7ED] text-[#C2410C] border-[#F97316]/20',
+  'bg-[#F0FDFA] text-[#0D9488] border-[#14B8A6]/20',
 ];
 
 function keyToPalette(key) {
@@ -27,15 +27,18 @@ export default function PersonTag({ name, preferences, showPreferences = true })
   return (
     <>
       {name !== null && name !== undefined && (
-        <span className="text-[14px] font-semibold text-[#111111]">{name || 'Unknown'}</span>
+        <span className="text-[14px] font-semibold text-[#1A120D]">
+          {name || 'Unknown'}
+        </span>
       )}
       {prefEntries.map(([key, value]) => (
         <span
           key={key}
-          className={`inline-flex shrink-0 items-center gap-1 border text-[12px] px-[10px] py-[3px] rounded-full font-medium leading-none whitespace-nowrap ${keyToPalette(key)}`}
+          className={`inline-flex items-center gap-1 border rounded-full font-medium shrink-0
+            text-[11px] px-2.5 py-[3px] leading-none ${keyToPalette(key)}`}
         >
-          <span className="opacity-60 capitalize">{key}:</span>
-          <span className="capitalize">{String(value)}</span>
+          <span className="opacity-70 capitalize">{key}:</span>
+          <span className="capitalize font-semibold">{String(value)}</span>
         </span>
       ))}
     </>

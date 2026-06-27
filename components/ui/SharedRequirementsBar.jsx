@@ -6,7 +6,7 @@ export default function SharedRequirementsBar({ requirements = [], warnings = []
   const hasSubstitutedWarning = warnings.some((w) => w?.code === 'SHARED_ITEM_SUBSTITUTED');
 
   return (
-    <div className="flex gap-4 overflow-auto bg-[#F7F7F5] rounded-lg px-4 py-2.5 mb-4">
+    <div className="flex gap-4 overflow-auto bg-[#FFF9F5] border border-[#F0E8E2] rounded-2xl px-4 py-2.5 mb-4">
       {requirements.map((req) => {
         const slotCount = Array.isArray(req.slot_ids) ? req.slot_ids.length : 0;
         return (
