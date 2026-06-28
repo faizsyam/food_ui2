@@ -1,4 +1,4 @@
-﻿import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import useOrderSchema from '../hooks/useOrderSchema';
 import OrderRenderer from '../OrderRenderer';
 import Navbar from '../components/layout/Navbar';
@@ -27,6 +27,7 @@ export default function HomePage() {
   } = useOrderSchema(restaurants, menus);
 
   const [currentView, setCurrentView] = useState(VIEWS.IDLE);
+  const [confirmedSchema, setConfirmedSchema] = useState(null);
 
   useEffect(() => {
     if (isLoading) {
@@ -45,11 +46,13 @@ export default function HomePage() {
 
   const handleStartOver = useCallback(() => {
     reset();
+    setConfirmedSchema(null);
     setCurrentView(VIEWS.IDLE);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [reset]);
 
-  const handleCheckout = useCallback(() => {
+  const handleCheckout = useCallback((finalSchema) => {
+    setConfirmedSchema(finalSchema);
     setCurrentView(VIEWS.CONFIRMED);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
@@ -75,7 +78,7 @@ export default function HomePage() {
 
         {currentView === VIEWS.CONFIRMED && (
           <OrderConfirmation
-            schema={schema}
+            schema={confirmedSchema || schema}
             restaurants={restaurants}
             onStartNewOrder={handleStartOver}
           />

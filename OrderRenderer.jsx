@@ -122,6 +122,10 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
     dispatch({ type: '_SET_STATE', schema: updatedSchema });
   }, []);
 
+  const handleCheckout = useCallback(() => {
+    onCheckout?.(liveSchema);
+  }, [onCheckout, liveSchema]);
+
   if (!propSchema || !liveSchema) {
     return (<div className="p-12 text-center text-[#9A9A96]">Submit a request to generate your order.</div>);
   }
@@ -142,7 +146,7 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
         onAddOrderItem={handleAddOrderItem}
         onRemoveOrderItem={handleRemoveOrderItem}
         onUpdateOrderItemQty={handleUpdateOrderItemQty}
-        onCheckout={onCheckout}
+        onCheckout={handleCheckout}
       />
     </div>
   );
