@@ -77,7 +77,7 @@ export default function LayoutShell({
         <div className="mb-6">
           <div>
             <h1 className="text-xl font-bold text-[#1A120D]">Your Meal Options</h1>
-            <p className="text-[13px] text-[#5C4F48] mt-1">AI-generated meal options for {slots.length} people</p>
+            <p className="text-[13px] text-[#5C4F48] mt-1">Personalized meal options for {slots.length} people</p>
           </div>
         </div>
 

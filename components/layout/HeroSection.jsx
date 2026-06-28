@@ -21,7 +21,7 @@ export default function HeroSection({ children, isCompact }) {
       <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center w-full">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFF0EA] border border-[#E8521A]/10 text-[#E8521A] text-[13px] font-medium mb-6">
           <Sparkles size={14} />
-          AI-powered food ordering
+          Smart food ordering
         </div>
         <h1 className="text-[36px] sm:text-[44px] font-bold text-[#1A120D] leading-[1.15] tracking-tight">
           Order food for everyone,{' '}
