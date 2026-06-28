@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, Clock, Plus, ShoppingCart, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
+import { Star, Sparkles, Clock, Plus, ShoppingCart, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
 import PersonTag from './PersonTag';
 import ItemRow from './ItemRow';
 import { formatIDR } from '../../lib/format';
@@ -38,17 +38,33 @@ function ItemImage({ itemId, className = '' }) {
 
 function BrowseItemRow({ item, onAdd }) {
   const isUnavailable = item.available === false;
+  const hasPromo = !!item.promo;
   if (isUnavailable) return null;
   return (
     <div className="flex items-center gap-3 py-2 hover:bg-[#FFF9F5] rounded-lg transition-colors cursor-pointer" onClick={onAdd}>
       <ItemImage itemId={item.id} className="w-16 aspect-square rounded-md shrink-0" />
       <div className="flex-1 min-w-0">
-        <span className="text-[14px] font-medium text-[#1A120D]">{item.name}</span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[14px] font-medium text-[#1A120D]">{item.name}</span>
+          {hasPromo && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#16A34A] bg-[#DCFCE7] px-2 py-[1px] rounded-full uppercase tracking-wide border border-[#86EFAC]">
+              <Sparkles size={9} className="fill-[#22C55E]" />
+              {item.promo.label || `${item.promo.discount_percent}% Off`}
+            </span>
+          )}
+        </div>
         {item.description && (
           <p className="text-[12px] text-[#9C8E84] line-clamp-1">{item.description}</p>
         )}
       </div>
-      <span className="text-[14px] font-semibold text-[#1A120D] tabular-nums">{formatIDR(item.price || 0)}</span>
+      {hasPromo ? (
+        <div className="flex flex-col items-end shrink-0">
+          <span className="text-[11px] text-[#9C8E84] line-through tabular-nums">{formatIDR(item.price || 0)}</span>
+          <span className="text-[14px] font-semibold text-[#22A65E] tabular-nums">{formatIDR(item.promo.discounted_price || 0)}</span>
+        </div>
+      ) : (
+        <span className="text-[14px] font-semibold text-[#1A120D] tabular-nums shrink-0">{formatIDR(item.price || 0)}</span>
+      )}
       <button
         onClick={(e) => { e.stopPropagation(); onAdd(); }}
         className="shrink-0 w-8 h-8 rounded-full bg-[#E8521A] text-white flex items-center justify-center hover:bg-[#D4491A] active:scale-90 transition-all duration-200"
@@ -123,11 +139,29 @@ export default function SlotCard({
     });
   };
 
+  function formatArrivalTime(arrival) {
+    if (!arrival) return null;
+    // Try parsing as ISO 8601
+    const date = new Date(arrival);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      });
+    }
+    // Fallback for non-ISO strings
+    return arrival;
+  }
+
   return (
     <div className="bg-white rounded-2xl border border-[#F0E8E2] overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300">
       {/* Option selector tabs */}
       {resolvedOptions.length > 1 && (
         <div className="px-6 pt-5">
+          <p className="text-[11px] font-bold text-[#9C8E84] uppercase tracking-widest mb-2">
+            Meal Options for {slot.person?.name || 'Guest'}
+          </p>
           <div className="flex flex-wrap gap-2">
             {resolvedOptions.map((opt) => (
               <button
@@ -182,7 +216,7 @@ export default function SlotCard({
               {selectedOption.estimated_arrival && (
                 <div className="flex items-center gap-1.5 text-[13px] text-[#5C4F48]">
                   <Clock size={14} className="text-[#9C8E84]" />
-                  <span>{selectedOption.estimated_arrival}</span>
+                  <span>Est. {formatArrivalTime(selectedOption.estimated_arrival)}</span>
                 </div>
               )}
               {selectedOption.restaurant?.location?.address && (

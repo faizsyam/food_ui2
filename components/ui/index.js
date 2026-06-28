@@ -1,7 +1,6 @@
 export { default as PersonTag } from './PersonTag';
 export { default as ItemRow } from './ItemRow';
 export { default as SlotCard } from './SlotCard';
-export { default as GroupContainer } from './GroupContainer';
 export { default as BudgetBar } from './BudgetBar';
 export { default as WarningBanner } from './WarningBanner';
 export { default as LayoutShell } from './LayoutShell';

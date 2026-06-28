@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, ShoppingCart } from 'lucide-react';
+import { Trash2, ShoppingCart, Star, Sparkles } from 'lucide-react';
 import { formatIDR } from '../../lib/format';
 
 function ItemImage({ itemId, className = '' }) {
@@ -26,11 +26,15 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
   const isBestSeller = Array.isArray(item.tags) && item.tags.includes('best-seller');
   const isUnavailable = item.available === false;
   const hasVariants = Array.isArray(item.variants) && item.variants.length > 0;
+  const hasPromo = !!item.promo;
 
   const activeVariant = hasVariants ? item.variants.find((v) => v.name === selectedVariant) ?? null : null;
   const priceDelta = activeVariant?.price_delta ?? 0;
-  const unitPrice = (item.price ?? 0) + priceDelta;
   const safeQty = quantity ?? 1;
+
+  const unitPrice = hasPromo
+    ? ((item.promo.discounted_price ?? item.price) + priceDelta)
+    : ((item.price ?? 0) + priceDelta);
   const lineTotal = unitPrice * safeQty;
 
   const handleDecrement = () => {
@@ -68,7 +72,16 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[14px] font-semibold text-[#1A120D]">{item.name}</span>
           {isBestSeller && (
-            <span className="text-[10px] font-semibold text-[#E8521A] bg-[#FFF0EA] px-2 py-[1px] rounded-full uppercase tracking-wide">Popular</span>
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#D97706] bg-[#FFFBEB] px-2 py-[1px] rounded-full uppercase tracking-wide border border-[#FEF3C7]">
+              <Star size={9} className="fill-[#F59E0B]" />
+              Popular
+            </span>
+          )}
+          {hasPromo && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#16A34A] bg-[#DCFCE7] px-2 py-[1px] rounded-full uppercase tracking-wide border border-[#86EFAC]">
+              <Sparkles size={9} className="fill-[#22C55E]" />
+              {item.promo.label || `${item.promo.discount_percent}% Off`}
+            </span>
           )}
         </div>
         {item.description && <p className="text-[13px] text-[#9C8E84] line-clamp-1 mt-0.5">{item.description}</p>}
@@ -99,7 +112,14 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
       </div>
 
       <div className="flex flex-col items-end gap-2 shrink-0 min-w-[80px]">
-        <span className="text-[14px] font-bold text-[#1A120D] tabular-nums">{formatIDR(lineTotal)}</span>
+        {hasPromo ? (
+          <div className="flex flex-col items-end">
+            <span className="text-[11px] text-[#9C8E84] line-through tabular-nums">{formatIDR((item.price ?? 0) + priceDelta)}</span>
+            <span className="text-[14px] font-bold text-[#22A65E] tabular-nums">{formatIDR(lineTotal)}</span>
+          </div>
+        ) : (
+          <span className="text-[14px] font-bold text-[#1A120D] tabular-nums">{formatIDR(lineTotal)}</span>
+        )}
         <div className="flex items-center gap-1">
           <button
             onClick={safeQty === 1 ? () => setShowConfirm(true) : handleDecrement}

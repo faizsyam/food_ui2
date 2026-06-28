@@ -86,7 +86,7 @@ export default function useOrderSchema(restaurants, menus) {
         throw new Error('Failed to parse server response');
       }
 
-      if (!data.schema || !Array.isArray(data.schema.slots) || typeof data.schema.layout !== 'object') {
+      if (!data.schema || !Array.isArray(data.schema.slots)) {
         throw new Error('Invalid schema returned');
       }
 

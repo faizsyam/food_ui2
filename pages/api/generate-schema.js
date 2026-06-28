@@ -28,7 +28,7 @@ function loadData(filename) {
 function stripMarkdownFences(text) {
   if (!text) return '';
   // Find first opening fence: either ``` or ```json
-  const openIdx = text.indexOf('```');
+  const openIdx = text.indexOf('\x60\x60\x60'); // actual backtick x3
   if (openIdx === -1) return text.trim(); // no fences at all
 
   // Find the first newline after the opening fence (start of actual JSON)
@@ -39,12 +39,69 @@ function stripMarkdownFences(text) {
   }
 
   // Find the last closing fence ```
-  const closeIdx = text.lastIndexOf('```');
+  const closeIdx = text.lastIndexOf('\x60\x60\x60');
   if (closeIdx !== -1 && closeIdx > contentStart) {
     return text.slice(contentStart, closeIdx).trim();
   }
   // Fallback: no closing fence found, grab everything after the opening fence line
   return text.slice(contentStart).trim();
+}
+
+/**
+ * Escape literal control characters that appear inside JSON string values.
+ * LLMs sometimes output unescaped newlines or tabs inside strings (e.g.
+ * notes, highlight_reason). This walks the text, tracks whether it is
+ * inside a string, and escapes any control characters found there.
+ */
+function sanitizeJsonStrings(text) {
+  let result = '';
+  let inString = false;
+  let escapeNext = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const code = char.charCodeAt(0);
+
+    if (escapeNext) {
+      result += char;
+      escapeNext = false;
+      continue;
+    }
+
+    if (char === '\\' && inString) {
+      result += char;
+      escapeNext = true;
+      continue;
+    }
+
+    if (char === '"' && !inString) {
+      inString = true;
+      result += char;
+    } else if (char === '"' && inString) {
+      inString = false;
+      result += char;
+    } else if (inString && code >= 0x00 && code <= 0x1f) {
+      // Control character inside a string — must be escaped
+      if (code === 0x09) result += '\\t';
+      else if (code === 0x0a) result += '\\n';
+      else if (code === 0x0d) result += '\\r';
+      else result += '\\u' + code.toString(16).padStart(4, '0');
+    } else {
+      result += char;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Extract the slice around the error position for debugging.
+ */
+function getDebugSnippet(text, position, radius = 200) {
+  if (!text || position < 0) return text;
+  const start = Math.max(0, position - radius);
+  let end = Math.min(text.length, position + radius);
+  return text.substring(start, end);
 }
 
 /**
@@ -78,16 +135,19 @@ export default async function handler(req, res) {
 
     // Build the AI prompt
     const systemPrompt = AGENT_PROMPT;
-    const userMessage = `
-## Restaurants
-${JSON.stringify(restaurants, null, 2)}
-
-## Menu Items
-${JSON.stringify(menus, null, 2)}
-
-## User Request
-${userRequest}
-`;
+    const userMessage = [
+      '## Restaurants',
+      JSON.stringify(restaurants, null, 2),
+      '',
+      '## Menu Items',
+      JSON.stringify(menus, null, 2),
+      '',
+      '## Current timestamp',
+      new Date().toISOString(),
+      '',
+      '## User Request',
+      userRequest,
+    ].join('\n');
 
     // Call the AI API via NVIDIA NIM
     const apiKey = process.env.NVIDIA_API_KEY;
@@ -129,31 +189,48 @@ ${userRequest}
       return res.status(502).json({ error: 'AI returned empty response' });
     }
 
-    // Strip markdown fences and parse JSON
+    // Strip markdown fences, sanitise control chars, parse JSON
     let parsedSchema;
     let rawForLogging = rawContent;
+    let parseErrorInfo = null;
     try {
-      const cleaned = stripMarkdownFences(rawContent);
+      let cleaned = stripMarkdownFences(rawContent);
+      cleaned = sanitizeJsonStrings(cleaned);
       parsedSchema = JSON.parse(cleaned);
     } catch (parseError) {
-      // Fallback: sometimes the LLM wraps JSON inside other text but still has balance braces
-      // Try to find the first '{' and last '}' and extract what's between them
-      const firstBrace = rawContent.indexOf('{');
-      const lastBrace = rawContent.lastIndexOf('}');
+      parseErrorInfo = parseError;
+      // Fallback: extract first {...balanced} pair
+      let firstBrace = rawContent.indexOf('{');
+      let lastBrace = -1;
+      let depth = 0;
+      for (let i = firstBrace; i < rawContent.length && firstBrace !== -1; i++) {
+        if (rawContent[i] === '{') depth++;
+        if (rawContent[i] === '}') depth--;
+        if (depth === 0) {
+          lastBrace = i;
+          break;
+        }
+      }
       if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
         try {
-          const extracted = rawContent.slice(firstBrace, lastBrace + 1);
+          let extracted = rawContent.slice(firstBrace, lastBrace + 1);
+          extracted = sanitizeJsonStrings(extracted);
           parsedSchema = JSON.parse(extracted);
+          parseErrorInfo = null;
         } catch (fallbackError) {
+          const errPos = fallbackError.message.match(/position (\d+)/);
+          const pos = errPos ? parseInt(errPos[1], 10) : 0;
           return res.status(502).json({
             error: `Failed to parse AI response: ${fallbackError.message}`,
-            debug: rawForLogging.substring(0, 500),
+            debug: getDebugSnippet(rawForLogging, pos, 300),
           });
         }
       } else {
+        const errPos = parseError.message.match(/position (\d+)/);
+        const pos = errPos ? parseInt(errPos[1], 10) : 0;
         return res.status(502).json({
           error: `Failed to parse AI response: ${parseError.message}`,
-          debug: rawForLogging.substring(0, 500),
+          debug: getDebugSnippet(rawForLogging, pos, 300),
         });
       }
     }
@@ -162,16 +239,14 @@ ${userRequest}
     if (
       !parsedSchema ||
       typeof parsedSchema !== 'object' ||
-      !Array.isArray(parsedSchema.slots) ||
-      !parsedSchema.layout ||
-      typeof parsedSchema.layout !== 'object'
+      !Array.isArray(parsedSchema.slots)
     ) {
       return res.status(422).json({
         error: 'Invalid schema returned',
       });
     }
 
-    // ── Post-processing ────────────────────────────────────────────────────
+    // -- Post-processing ----------------------------------------------------
 
     // 1. Address fallback for every slot with a missing address
     const fallbackAddress = 'Jl. Sudirman No. 1, Jakarta Pusat, DKI Jakarta 10220';

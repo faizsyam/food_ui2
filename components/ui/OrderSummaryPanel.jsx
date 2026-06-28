@@ -28,8 +28,9 @@ function OrderItemRow({ item, onQtyChange, onRemove }) {
   )
 }
 
-export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderItem, onUpdateOrderItemQty, groupingStrategy = 'by_person', onSetGrouping }) {
+export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderItem, onUpdateOrderItemQty }) {
   const [copied, setCopied] = useState(false)
+  const [groupingStrategy, setGroupingStrategy] = useState('by_person')
 
   if (!schema) return null
 
@@ -99,7 +100,7 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
           <h2 className="text-[17px] font-bold text-[#1A120D]">Order Summary</h2>
           <div className="flex items-center gap-1.5 bg-[#FFF9F5] border border-[#F0E8E2] rounded-xl p-0.5">
             <button
-              onClick={() => onSetGrouping?.('by_person')}
+              onClick={() => setGroupingStrategy('by_person')}
               className={`px-3 py-1.5 text-[12px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1 ${
                 groupingStrategy === 'by_person'
                   ? 'bg-white text-[#E8521A] shadow-soft'
@@ -110,7 +111,7 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
               Person
             </button>
             <button
-              onClick={() => onSetGrouping?.('by_restaurant')}
+              onClick={() => setGroupingStrategy('by_restaurant')}
               className={`px-3 py-1.5 text-[12px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1 ${
                 groupingStrategy === 'by_restaurant'
                   ? 'bg-white text-[#E8521A] shadow-soft'

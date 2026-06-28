@@ -31,7 +31,6 @@ export default function LayoutShell({
   schema,
   restaurants,
   menus,
-  groupingStrategy = 'by_person',
   onItemQuantityChange,
   onItemRemove,
   onVariantChange,
@@ -41,7 +40,6 @@ export default function LayoutShell({
   onAddItem,
   onRemoveOrderItem,
   onUpdateOrderItemQty,
-  onSetGrouping,
   onCheckout,
 }) {
   if (!schema) return null;
@@ -145,8 +143,6 @@ export default function LayoutShell({
                 onCheckout={onCheckout}
                 onRemoveOrderItem={onRemoveOrderItem}
                 onUpdateOrderItemQty={onUpdateOrderItemQty}
-                groupingStrategy={groupingStrategy}
-                onSetGrouping={onSetGrouping}
               />
             </div>
           </div>

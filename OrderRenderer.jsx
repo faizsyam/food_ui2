@@ -77,8 +77,6 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
     }
   }, [propSchema, restaurants, menus]);
 
-  const groupingStrategy = schema?.layout?.grouping_strategy || 'by_person';
-
   const liveSchema = useMemo(() => {
     if (!schema) return null;
     return { ...schema, order_summary: recomputeOrderSummary(schema, restaurants) };
@@ -120,10 +118,6 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
     dispatch({ type: 'UPDATE_ORDER_ITEM_QTY', order_item_id: orderItemId, quantity });
   }, []);
 
-  const handleSetGrouping = useCallback((g) => {
-    dispatch({ type: 'SET_GROUPING', grouping_strategy: g });
-  }, []);
-
   const handleSchemaChange = useCallback((updatedSchema) => {
     dispatch({ type: '_SET_STATE', schema: updatedSchema });
   }, []);
@@ -138,7 +132,6 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
         schema={liveSchema}
         restaurants={restaurants}
         menus={menus}
-        groupingStrategy={groupingStrategy}
         onSchemaChange={handleSchemaChange}
         onItemQuantityChange={handleItemQuantityChange}
         onItemRemove={handleItemRemove}
@@ -149,7 +142,6 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
         onAddOrderItem={handleAddOrderItem}
         onRemoveOrderItem={handleRemoveOrderItem}
         onUpdateOrderItemQty={handleUpdateOrderItemQty}
-        onSetGrouping={handleSetGrouping}
         onCheckout={onCheckout}
       />
     </div>
