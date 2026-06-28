@@ -278,6 +278,37 @@ export default async function handler(req, res) {
       parsedSchema.order_summary.blocking_issues = blockingCodes;
     }
 
+    // 4. Recalculate timing for each option based on real menu prep timesrefer amount time data
+    if (Array.isArray(parsedSchema.slots)) {
+      for (const slot of parsedSchema.slots) {
+        if (!Array.isArray(slot.options)) continue;
+        for (const option of slot.options) {
+          if (!option.restaurant_id || !Array.isArray(option.items)) continue;
+
+          const restaurant = restaurants.find((r) => r.id === option.restaurant_id);
+          const prepTimes = [];
+          for (const item of option.items) {
+            const menuItem = menus.find((m) => m.id === item.item_id);
+            if (menuItem?.preparation_time_minutes != null) {
+              prepTimes.push(menuItem.preparation_time_minutes);
+            }
+          }
+
+          if (prepTimes.length > 0 && restaurant?.delivery_time_minutes != null) {
+            const minMinutes = restaurant.delivery_time_minutes + Math.max(...prepTimes);
+            const now = new Date();
+            const minArrival = new Date(now.getTime() + minMinutes * 60000).toISOString();
+            option.estimated_arrival = minArrival;
+
+            // Also update the slot-level delivery.estimated_arrival if this is the selected option
+            if (slot.selected_option_id === option.option_id && slot.delivery) {
+              slot.delivery.estimated_arrival = minArrival;
+            }
+          }
+        }
+      }
+    }
+
     // Log the generated schema for debugging
     console.log('[generate-schema] Parsed schema:', JSON.stringify(parsedSchema, null, 2));
 

@@ -6,13 +6,13 @@
     "name": "Nasi Campur Bu Tini",
     "description": "Steamed rice topped with a generous mix of fried chicken, egg, tempeh, and vegetables.",
     "price": 22000,
+    "preparation_time_minutes": 10,
     "tags": [
       "best-seller",
       "halal",
       "comfort food",
       "family portions"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Extra Rice",
@@ -31,13 +31,22 @@
     "name": "Ayam Goreng Kremes",
     "description": "Crispy fried chicken topped with savory golden kremes crumbs.",
     "price": 18000,
+    "preparation_time_minutes": 15,
     "tags": [
       "best-seller",
       "halal",
       "crispy"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Extra Kremes",
+        "price_delta": 3000
+      },
+      {
+        "name": "Add Nasi",
+        "price_delta": 5000
+      }
+    ]
   },
   {
     "id": "item_003",
@@ -46,12 +55,12 @@
     "name": "Rendang Daging",
     "description": "Slow-cooked beef in rich coconut spice gravy until tender and fragrant.",
     "price": 28000,
+    "preparation_time_minutes": 20,
     "tags": [
       "spicy",
       "halal",
       "heavy"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -67,12 +76,12 @@
     "name": "Tempe & Tahu Bacem",
     "description": "Sweet soy-braised tempeh and tofu, a homely everyday side dish.",
     "price": 12000,
+    "preparation_time_minutes": 8,
     "tags": [
       "vegetarian",
       "halal",
       "budget-friendly"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -82,11 +91,11 @@
     "name": "Ikan Asin Goreng",
     "description": "Salted fish fried until crisp, served as a punchy savory side.",
     "price": 15000,
+    "preparation_time_minutes": 10,
     "tags": [
       "salty",
       "halal"
     ],
-    "available": false,
     "variants": []
   },
   {
@@ -96,12 +105,12 @@
     "name": "Sayur Asem",
     "description": "Light, tangy vegetable soup with tamarind and fresh greens.",
     "price": 10000,
+    "preparation_time_minutes": 12,
     "tags": [
       "vegetarian",
       "light",
       "halal"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -117,11 +126,11 @@
     "name": "Sambal Terasi",
     "description": "Fiery shrimp-paste chili sambal pounded fresh to order.",
     "price": 5000,
+    "preparation_time_minutes": 5,
     "tags": [
       "spicy",
       "halal"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -131,11 +140,11 @@
     "name": "Es Teh Manis",
     "description": "Classic sweet iced tea, the everyday companion to any warung meal.",
     "price": 5000,
+    "preparation_time_minutes": 3,
     "tags": [
       "budget-friendly",
       "halal"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -145,11 +154,11 @@
     "name": "Es Jeruk",
     "description": "Freshly squeezed iced orange juice with a hint of sweetness.",
     "price": 6000,
+    "preparation_time_minutes": 4,
     "tags": [
       "budget-friendly",
       "halal"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -165,13 +174,13 @@
     "name": "Bebek Bakar Kayu Bara",
     "description": "Charcoal-grilled duck marinated in a smoky spice blend until deeply tender.",
     "price": 75000,
+    "preparation_time_minutes": 35,
     "tags": [
       "best-seller",
       "halal",
       "premium",
       "spicy"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Whole Duck (Share)",
@@ -186,14 +195,23 @@
     "name": "Iga Bakar Madu",
     "description": "Beef short ribs glazed with honey and slow-grilled over charcoal.",
     "price": 95000,
+    "preparation_time_minutes": 40,
     "tags": [
       "best-seller",
       "halal",
       "heavy",
       "premium"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Add Extra Rib",
+        "price_delta": 30000
+      },
+      {
+        "name": "Add Steamed Rice",
+        "price_delta": 8000
+      }
+    ]
   },
   {
     "id": "item_012",
@@ -202,11 +220,11 @@
     "name": "Gurame Asam Manis",
     "description": "Whole gourami fish fried crisp and topped with tangy sweet-sour sauce.",
     "price": 68000,
+    "preparation_time_minutes": 30,
     "tags": [
       "halal",
       "seafood"
     ],
-    "available": false,
     "variants": []
   },
   {
@@ -216,12 +234,12 @@
     "name": "Sate Maranggi",
     "description": "Marinated grilled beef skewers from Purwakarta, served with sweet soy and shallots.",
     "price": 45000,
+    "preparation_time_minutes": 20,
     "tags": [
       "halal",
       "spicy",
       "popular"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -237,12 +255,12 @@
     "name": "Tahu Tempe Penyet",
     "description": "Smashed fried tofu and tempeh served with a fiery hand-pounded sambal.",
     "price": 28000,
+    "preparation_time_minutes": 12,
     "tags": [
       "vegetarian",
       "halal",
       "spicy"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -252,13 +270,22 @@
     "name": "Perkedel Jagung",
     "description": "Sweet corn fritters, crisp on the outside and soft within.",
     "price": 22000,
+    "preparation_time_minutes": 10,
     "tags": [
       "vegetarian",
       "halal",
       "snack"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Extra Portion (2pcs)",
+        "price_delta": 10000
+      },
+      {
+        "name": "Add Sambal Sauce",
+        "price_delta": 3000
+      }
+    ]
   },
   {
     "id": "item_016",
@@ -267,11 +294,11 @@
     "name": "Es Kelapa Muda",
     "description": "Young coconut water served chilled with tender coconut flesh.",
     "price": 25000,
+    "preparation_time_minutes": 5,
     "tags": [
       "refreshing",
       "halal"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -281,11 +308,11 @@
     "name": "Kopi Tubruk",
     "description": "Traditional Indonesian black coffee, brewed strong and unfiltered.",
     "price": 20000,
+    "preparation_time_minutes": 5,
     "tags": [
       "halal",
       "caffeine"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -295,12 +322,12 @@
     "name": "Wedang Jahe",
     "description": "Warm spiced ginger tea, soothing and lightly sweet.",
     "price": 18000,
+    "preparation_time_minutes": 7,
     "tags": [
       "halal",
       "warm",
       "comfort food"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -310,12 +337,12 @@
     "name": "Shoyu Ramen",
     "description": "Classic soy-based broth ramen with chashu pork, egg, and scallions.",
     "price": 48000,
+    "preparation_time_minutes": 15,
     "tags": [
       "best-seller",
       "comfort food",
       "contains pork"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Extra Noodle",
@@ -340,12 +367,12 @@
     "name": "Tonkotsu Ramen",
     "description": "Rich, creamy pork bone broth ramen simmered for hours for deep flavor.",
     "price": 55000,
+    "preparation_time_minutes": 18,
     "tags": [
       "best-seller",
       "rich broth",
       "contains pork"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Extra Chashu",
@@ -360,11 +387,11 @@
     "name": "Chicken Paitan Ramen",
     "description": "Silky chicken bone broth ramen, lighter than pork-based versions.",
     "price": 50000,
+    "preparation_time_minutes": 15,
     "tags": [
       "halal-friendly",
       "rich broth"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -374,12 +401,21 @@
     "name": "Spicy Miso Ramen",
     "description": "Fermented miso broth ramen with a fiery chili kick.",
     "price": 52000,
+    "preparation_time_minutes": 16,
     "tags": [
       "spicy",
       "comfort food"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Extra Spicy",
+        "price_delta": 0
+      },
+      {
+        "name": "Add Corn Topping",
+        "price_delta": 5000
+      }
+    ]
   },
   {
     "id": "item_023",
@@ -388,11 +424,11 @@
     "name": "Vegetable Ramen",
     "description": "Light vegetable broth ramen loaded with seasonal greens and mushrooms.",
     "price": 45000,
+    "preparation_time_minutes": 13,
     "tags": [
       "vegetarian",
       "light"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -408,11 +444,11 @@
     "name": "Gyoza (5pcs)",
     "description": "Pan-fried pork dumplings with a crisp bottom and juicy filling.",
     "price": 28000,
+    "preparation_time_minutes": 12,
     "tags": [
       "contains pork",
       "crispy"
     ],
-    "available": false,
     "variants": []
   },
   {
@@ -422,12 +458,12 @@
     "name": "Karaage Chicken",
     "description": "Japanese-style fried chicken bites, crispy and well-seasoned.",
     "price": 32000,
+    "preparation_time_minutes": 14,
     "tags": [
       "halal-friendly",
       "crispy",
       "popular"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -437,10 +473,10 @@
     "name": "Ocha (Green Tea)",
     "description": "Traditional Japanese green tea, served hot or iced.",
     "price": 12000,
+    "preparation_time_minutes": 4,
     "tags": [
       "refreshing"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -450,11 +486,11 @@
     "name": "Ramune Soda",
     "description": "Classic Japanese carbonated soda in a marble-stopped bottle.",
     "price": 18000,
+    "preparation_time_minutes": 2,
     "tags": [
       "sweet",
       "fizzy"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -464,13 +500,22 @@
     "name": "Salmon Sashimi (5pcs)",
     "description": "Fresh, thickly sliced salmon sashimi served chilled.",
     "price": 65000,
+    "preparation_time_minutes": 10,
     "tags": [
       "best-seller",
       "contains raw fish",
       "premium"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "8pcs Portion",
+        "price_delta": 35000
+      },
+      {
+        "name": "Add Wasabi & Soy Set",
+        "price_delta": 5000
+      }
+    ]
   },
   {
     "id": "item_029",
@@ -479,12 +524,12 @@
     "name": "Tuna Nigiri Set (6pcs)",
     "description": "Hand-pressed tuna nigiri set with seasoned sushi rice.",
     "price": 70000,
+    "preparation_time_minutes": 12,
     "tags": [
       "best-seller",
       "contains raw fish",
       "premium"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -494,11 +539,11 @@
     "name": "California Roll",
     "description": "Crab, avocado, and cucumber roll wrapped in nori and rice.",
     "price": 45000,
+    "preparation_time_minutes": 10,
     "tags": [
       "popular",
       "contains shellfish"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -508,11 +553,11 @@
     "name": "Unagi Don",
     "description": "Grilled freshwater eel glazed in sweet soy sauce over steamed rice.",
     "price": 85000,
+    "preparation_time_minutes": 20,
     "tags": [
       "premium",
       "heavy"
     ],
-    "available": false,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -528,11 +573,11 @@
     "name": "Bento Box Teriyaki Chicken",
     "description": "Grilled teriyaki chicken set with rice, salad, and side dishes.",
     "price": 78000,
+    "preparation_time_minutes": 18,
     "tags": [
       "business lunch",
       "halal-friendly"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Upgrade to Salmon",
@@ -547,11 +592,11 @@
     "name": "Chirashi Don",
     "description": "Assorted fresh sashimi artfully arranged over seasoned sushi rice.",
     "price": 95000,
+    "preparation_time_minutes": 15,
     "tags": [
       "premium",
       "contains raw fish"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -561,11 +606,11 @@
     "name": "Miso Soup",
     "description": "Traditional soybean paste soup with tofu and seaweed.",
     "price": 18000,
+    "preparation_time_minutes": 5,
     "tags": [
       "light",
       "vegetarian"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -575,10 +620,10 @@
     "name": "Iced Genmaicha",
     "description": "Roasted brown rice green tea served chilled.",
     "price": 22000,
+    "preparation_time_minutes": 4,
     "tags": [
       "refreshing"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -588,10 +633,10 @@
     "name": "Hot Sencha",
     "description": "Delicate Japanese green tea served hot.",
     "price": 18000,
+    "preparation_time_minutes": 4,
     "tags": [
       "light"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -607,11 +652,11 @@
     "name": "Classic Cheeseburger",
     "description": "Juicy beef patty with melted cheddar, lettuce, and house sauce.",
     "price": 42000,
+    "preparation_time_minutes": 12,
     "tags": [
       "best-seller",
       "comfort food"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Add Bacon",
@@ -630,11 +675,11 @@
     "name": "Double Smash Burger",
     "description": "Two thin smash-pressed patties stacked with cheese and pickles.",
     "price": 58000,
+    "preparation_time_minutes": 14,
     "tags": [
       "best-seller",
       "heavy"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -644,12 +689,21 @@
     "name": "Crispy Chicken Burger",
     "description": "Crunchy fried chicken thigh with slaw and spicy mayo.",
     "price": 45000,
+    "preparation_time_minutes": 15,
     "tags": [
       "crispy",
       "popular"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Extra Spicy Mayo",
+        "price_delta": 2000
+      },
+      {
+        "name": "Add Cheese",
+        "price_delta": 5000
+      }
+    ]
   },
   {
     "id": "item_040",
@@ -658,11 +712,11 @@
     "name": "BBQ Bacon Burger",
     "description": "Beef patty topped with crispy bacon and smoky BBQ sauce.",
     "price": 55000,
+    "preparation_time_minutes": 14,
     "tags": [
       "contains pork",
       "smoky"
     ],
-    "available": false,
     "variants": []
   },
   {
@@ -672,11 +726,11 @@
     "name": "Veggie Burger",
     "description": "Plant-based patty with fresh greens and tangy house sauce.",
     "price": 48000,
+    "preparation_time_minutes": 12,
     "tags": [
       "vegetarian",
       "plant-based"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -686,12 +740,21 @@
     "name": "French Fries",
     "description": "Classic crispy golden fries, lightly salted.",
     "price": 22000,
+    "preparation_time_minutes": 8,
     "tags": [
       "vegetarian",
       "snack"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Large Portion",
+        "price_delta": 8000
+      },
+      {
+        "name": "Add Cheese Sauce",
+        "price_delta": 5000
+      }
+    ]
   },
   {
     "id": "item_043",
@@ -700,11 +763,11 @@
     "name": "Onion Rings",
     "description": "Battered and fried onion rings with a crunchy coating.",
     "price": 25000,
+    "preparation_time_minutes": 10,
     "tags": [
       "vegetarian",
       "crispy"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -720,11 +783,11 @@
     "name": "Chocolate Milkshake",
     "description": "Thick and creamy chocolate milkshake topped with whipped cream.",
     "price": 28000,
+    "preparation_time_minutes": 6,
     "tags": [
       "sweet",
       "dessert-like"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -734,11 +797,11 @@
     "name": "Cola Float",
     "description": "Cold cola poured over a scoop of vanilla ice cream.",
     "price": 25000,
+    "preparation_time_minutes": 4,
     "tags": [
       "sweet",
       "fizzy"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -748,12 +811,12 @@
     "name": "Quinoa Power Bowl",
     "description": "Quinoa with roasted vegetables and grilled chicken over mixed greens.",
     "price": 52000,
+    "preparation_time_minutes": 15,
     "tags": [
       "best-seller",
       "healthy options",
       "gluten-free"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Add Avocado",
@@ -772,11 +835,11 @@
     "name": "Caesar Salad",
     "description": "Crisp romaine with parmesan, croutons, and grilled chicken in Caesar dressing.",
     "price": 48000,
+    "preparation_time_minutes": 12,
     "tags": [
       "best-seller",
       "healthy options"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -786,12 +849,12 @@
     "name": "Vegan Buddha Bowl",
     "description": "Mixed grains, roasted vegetables, and chickpeas with tahini dressing.",
     "price": 50000,
+    "preparation_time_minutes": 13,
     "tags": [
       "vegan",
       "healthy options",
       "gluten-free"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -801,11 +864,11 @@
     "name": "Grilled Salmon Salad",
     "description": "Mixed greens topped with a generous portion of grilled salmon.",
     "price": 68000,
+    "preparation_time_minutes": 18,
     "tags": [
       "healthy options",
       "high protein"
     ],
-    "available": false,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -821,11 +884,11 @@
     "name": "Chicken Avocado Wrap",
     "description": "Whole wheat wrap filled with grilled chicken, avocado, and fresh greens.",
     "price": 45000,
+    "preparation_time_minutes": 10,
     "tags": [
       "healthy options",
       "popular"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -835,11 +898,11 @@
     "name": "Falafel Wrap",
     "description": "Crispy chickpea falafel wrapped with fresh vegetables and tahini sauce.",
     "price": 42000,
+    "preparation_time_minutes": 10,
     "tags": [
       "vegetarian",
       "healthy options"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -849,11 +912,11 @@
     "name": "Green Detox Smoothie",
     "description": "Spinach, apple, and ginger blended into a refreshing detox smoothie.",
     "price": 32000,
+    "preparation_time_minutes": 5,
     "tags": [
       "healthy options",
       "low sugar"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -863,12 +926,21 @@
     "name": "Berry Protein Smoothie",
     "description": "Mixed berries blended with protein powder for a post-workout boost.",
     "price": 35000,
+    "preparation_time_minutes": 5,
     "tags": [
       "healthy options",
       "high protein"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Add Extra Protein Scoop",
+        "price_delta": 8000
+      },
+      {
+        "name": "Upgrade to Large",
+        "price_delta": 7000
+      }
+    ]
   },
   {
     "id": "item_054",
@@ -877,11 +949,11 @@
     "name": "Mango Coconut Smoothie",
     "description": "Tropical mango and coconut blended into a creamy smoothie.",
     "price": 30000,
+    "preparation_time_minutes": 5,
     "tags": [
       "refreshing",
       "healthy options"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -891,11 +963,11 @@
     "name": "Mie Pangsit Babi",
     "description": "Egg noodles tossed in savory sauce, topped with pork wonton.",
     "price": 35000,
+    "preparation_time_minutes": 12,
     "tags": [
       "best-seller",
       "contains pork"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -905,11 +977,11 @@
     "name": "Nasi Ayam Hainan",
     "description": "Hainanese-style poached chicken over fragrant rice with chili sauce.",
     "price": 38000,
+    "preparation_time_minutes": 20,
     "tags": [
       "best-seller",
       "comfort food"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -925,11 +997,20 @@
     "name": "Bakmi Ayam Jamur",
     "description": "Springy egg noodles with seasoned chicken and mushroom toppings.",
     "price": 32000,
+    "preparation_time_minutes": 12,
     "tags": [
       "comfort food"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Extra Mushroom",
+        "price_delta": 6000
+      },
+      {
+        "name": "Add Pangsit",
+        "price_delta": 8000
+      }
+    ]
   },
   {
     "id": "item_058",
@@ -938,11 +1019,11 @@
     "name": "Capcay Seafood",
     "description": "Mixed vegetables stir-fried with shrimp and squid in light sauce.",
     "price": 45000,
+    "preparation_time_minutes": 15,
     "tags": [
       "contains shellfish",
       "family portions"
     ],
-    "available": false,
     "variants": []
   },
   {
@@ -952,11 +1033,11 @@
     "name": "Kwetiau Goreng",
     "description": "Fried flat rice noodles with egg, vegetables, and savory dark soy sauce.",
     "price": 36000,
+    "preparation_time_minutes": 12,
     "tags": [
       "popular",
       "heavy"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -966,11 +1047,11 @@
     "name": "Sup Buntut",
     "description": "Hearty oxtail soup simmered until tender with vegetables.",
     "price": 55000,
+    "preparation_time_minutes": 25,
     "tags": [
       "heavy",
       "comfort food"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -980,11 +1061,11 @@
     "name": "Sup Asparagus Kepiting",
     "description": "Light, silky asparagus soup with shredded crab meat.",
     "price": 40000,
+    "preparation_time_minutes": 15,
     "tags": [
       "contains shellfish",
       "light"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -994,10 +1075,10 @@
     "name": "Es Lidah Buaya",
     "description": "Chilled aloe vera drink with a subtly sweet, refreshing taste.",
     "price": 15000,
+    "preparation_time_minutes": 4,
     "tags": [
       "refreshing"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -1013,10 +1094,10 @@
     "name": "Teh Tarik",
     "description": "Frothy pulled milk tea, sweet and well-blended.",
     "price": 16000,
+    "preparation_time_minutes": 6,
     "tags": [
       "sweet"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1026,12 +1107,12 @@
     "name": "Butter Chicken",
     "description": "Tender chicken simmered in a creamy, mildly spiced tomato gravy.",
     "price": 55000,
+    "preparation_time_minutes": 20,
     "tags": [
       "best-seller",
       "halal",
       "mild spicy"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Add Naan",
@@ -1046,12 +1127,12 @@
     "name": "Chicken Tikka Masala",
     "description": "Char-grilled spiced chicken in a robust, fiery masala sauce.",
     "price": 52000,
+    "preparation_time_minutes": 22,
     "tags": [
       "best-seller",
       "halal",
       "spicy"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1061,11 +1142,11 @@
     "name": "Paneer Butter Masala",
     "description": "Soft cottage cheese cubes in a rich, buttery tomato curry.",
     "price": 48000,
+    "preparation_time_minutes": 18,
     "tags": [
       "vegetarian",
       "halal"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1075,12 +1156,12 @@
     "name": "Lamb Rogan Josh",
     "description": "Slow-cooked lamb in a deeply aromatic Kashmiri spice gravy.",
     "price": 68000,
+    "preparation_time_minutes": 35,
     "tags": [
       "halal",
       "spicy",
       "heavy"
     ],
-    "available": false,
     "variants": []
   },
   {
@@ -1090,11 +1171,11 @@
     "name": "Dal Makhani",
     "description": "Creamy black lentils slow-simmered with butter and mild spices.",
     "price": 38000,
+    "preparation_time_minutes": 20,
     "tags": [
       "vegetarian",
       "halal"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1104,11 +1185,11 @@
     "name": "Garlic Naan",
     "description": "Soft tandoor-baked flatbread brushed with garlic butter.",
     "price": 22000,
+    "preparation_time_minutes": 10,
     "tags": [
       "halal",
       "vegetarian"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -1124,13 +1205,22 @@
     "name": "Biryani Rice (Chicken)",
     "description": "Fragrant spiced basmati rice layered with tender chicken pieces.",
     "price": 50000,
+    "preparation_time_minutes": 25,
     "tags": [
       "halal",
       "spicy",
       "heavy"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Upgrade to Lamb Biryani",
+        "price_delta": 20000
+      },
+      {
+        "name": "Add Raita",
+        "price_delta": 8000
+      }
+    ]
   },
   {
     "id": "item_071",
@@ -1139,12 +1229,12 @@
     "name": "Mango Lassi",
     "description": "Chilled yogurt drink blended with sweet ripe mango.",
     "price": 25000,
+    "preparation_time_minutes": 5,
     "tags": [
       "halal",
       "sweet",
       "refreshing"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1154,11 +1244,11 @@
     "name": "Masala Chai",
     "description": "Spiced milk tea simmered with cardamom, cinnamon, and clove.",
     "price": 18000,
+    "preparation_time_minutes": 8,
     "tags": [
       "halal",
       "warm"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1168,12 +1258,12 @@
     "name": "Samgyeopsal Set (Pork Belly)",
     "description": "Thick-cut pork belly grilled tableside with lettuce wraps and sauces.",
     "price": 85000,
+    "preparation_time_minutes": 20,
     "tags": [
       "best-seller",
       "contains pork",
       "group dining"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Add Extra Meat (200g)",
@@ -1188,12 +1278,21 @@
     "name": "Bulgogi Beef Set",
     "description": "Sweet soy-marinated grilled beef served with rice and banchan.",
     "price": 95000,
+    "preparation_time_minutes": 22,
     "tags": [
       "best-seller",
       "group dining"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Add Extra Banchan",
+        "price_delta": 15000
+      },
+      {
+        "name": "Add Steamed Egg",
+        "price_delta": 10000
+      }
+    ]
   },
   {
     "id": "item_075",
@@ -1202,11 +1301,11 @@
     "name": "Spicy Chicken Galbi",
     "description": "Grilled chicken thighs coated in a spicy gochujang glaze.",
     "price": 65000,
+    "preparation_time_minutes": 20,
     "tags": [
       "spicy",
       "popular"
     ],
-    "available": false,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -1222,11 +1321,11 @@
     "name": "Kimchi Jjigae",
     "description": "Bubbling kimchi stew with tofu, pork, and a deep fermented spice.",
     "price": 45000,
+    "preparation_time_minutes": 18,
     "tags": [
       "spicy",
       "comfort food"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1236,12 +1335,21 @@
     "name": "Bibimbap",
     "description": "Mixed rice bowl with seasoned vegetables, egg, and chili paste.",
     "price": 50000,
+    "preparation_time_minutes": 14,
     "tags": [
       "popular",
       "customizable"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Add Bulgogi Beef",
+        "price_delta": 15000
+      },
+      {
+        "name": "Extra Spicy",
+        "price_delta": 0
+      }
+    ]
   },
   {
     "id": "item_078",
@@ -1250,11 +1358,11 @@
     "name": "Kimchi (Side)",
     "description": "Classic fermented cabbage with a tangy, spicy kick.",
     "price": 12000,
+    "preparation_time_minutes": 3,
     "tags": [
       "spicy",
       "vegetarian"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1264,11 +1372,11 @@
     "name": "Japchae",
     "description": "Stir-fried glass noodles with vegetables in a lightly sweet sesame sauce.",
     "price": 35000,
+    "preparation_time_minutes": 12,
     "tags": [
       "vegetarian option",
       "popular"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1278,11 +1386,11 @@
     "name": "Korean Iced Tea (Yuja)",
     "description": "Citron-based iced tea, tangy and lightly sweet.",
     "price": 22000,
+    "preparation_time_minutes": 4,
     "tags": [
       "refreshing",
       "sweet"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1292,11 +1400,11 @@
     "name": "Soju Cocktail (Non-Alcoholic Mocktail)",
     "description": "Fruity mocktail inspired by classic soju cocktails, alcohol-free.",
     "price": 28000,
+    "preparation_time_minutes": 6,
     "tags": [
       "refreshing",
       "mocktail"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -1312,12 +1420,12 @@
     "name": "Nasi Goreng Kampung",
     "description": "Village-style fried rice with anchovies, egg, and a touch of spice.",
     "price": 32000,
+    "preparation_time_minutes": 12,
     "tags": [
       "best-seller",
       "halal",
       "comfort food"
     ],
-    "available": true,
     "variants": [
       {
         "name": "Add Fried Egg",
@@ -1336,13 +1444,22 @@
     "name": "Avocado Toast",
     "description": "Smashed avocado on toasted sourdough with chili flakes and lime.",
     "price": 35000,
+    "preparation_time_minutes": 8,
     "tags": [
       "best-seller",
       "vegetarian",
       "healthy options"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Add Poached Egg",
+        "price_delta": 7000
+      },
+      {
+        "name": "Add Smoked Salmon",
+        "price_delta": 18000
+      }
+    ]
   },
   {
     "id": "item_084",
@@ -1351,11 +1468,11 @@
     "name": "Eggs Benedict",
     "description": "Poached eggs and ham on English muffin, topped with hollandaise sauce.",
     "price": 42000,
+    "preparation_time_minutes": 15,
     "tags": [
       "halal",
       "brunch"
     ],
-    "available": false,
     "variants": []
   },
   {
@@ -1365,11 +1482,11 @@
     "name": "Pancake Stack",
     "description": "Fluffy stacked pancakes drizzled with butter and maple syrup.",
     "price": 38000,
+    "preparation_time_minutes": 15,
     "tags": [
       "sweet",
       "vegetarian"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1379,11 +1496,11 @@
     "name": "Croissant Sandwich",
     "description": "Buttery croissant filled with ham and melted cheese.",
     "price": 30000,
+    "preparation_time_minutes": 8,
     "tags": [
       "contains pork option",
       "popular"
     ],
-    "available": true,
     "variants": [],
     "promo": {
       "type": "discount",
@@ -1399,12 +1516,12 @@
     "name": "Molten Chocolate Lava Cake",
     "description": "Warm chocolate cake with a gooey molten center, served with ice cream.",
     "price": 35000,
+    "preparation_time_minutes": 15,
     "tags": [
       "sweet",
       "dessert",
       "contains nuts"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1414,11 +1531,11 @@
     "name": "Cheesecake Slice",
     "description": "Creamy baked cheesecake with a buttery biscuit base.",
     "price": 32000,
+    "preparation_time_minutes": 5,
     "tags": [
       "sweet",
       "dessert"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1428,12 +1545,12 @@
     "name": "Es Kopi Susu Gula Aren",
     "description": "Iced milk coffee sweetened with rich palm sugar syrup.",
     "price": 25000,
+    "preparation_time_minutes": 6,
     "tags": [
       "halal",
       "caffeine",
       "popular"
     ],
-    "available": true,
     "variants": []
   },
   {
@@ -1443,11 +1560,20 @@
     "name": "Matcha Latte",
     "description": "Smooth matcha green tea blended with milk, served hot or iced.",
     "price": 28000,
+    "preparation_time_minutes": 6,
     "tags": [
       "halal",
       "low sugar option"
     ],
-    "available": true,
-    "variants": []
+    "variants": [
+      {
+        "name": "Iced",
+        "price_delta": 0
+      },
+      {
+        "name": "Add Extra Shot",
+        "price_delta": 5000
+      }
+    ]
   }
 ]

@@ -1,6 +1,7 @@
-import React, { useState } from "react"
-import { Copy, Check, Truck, Plus, Trash2, ShoppingCart, User, Store } from "lucide-react"
+import React, { useState, useMemo } from "react"
+import { Copy, Check, Truck, Plus, Trash2, ShoppingCart, User, Store, Clock } from "lucide-react"
 import { formatIDR } from "../../lib/format"
+import { formatTimingRange, calculateOrderTiming } from "../../lib/timing"
 
 function OrderItemRow({ item, onQtyChange, onRemove }) {
   const handleDec = () => {
@@ -28,7 +29,7 @@ function OrderItemRow({ item, onQtyChange, onRemove }) {
   )
 }
 
-export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderItem, onUpdateOrderItemQty }) {
+export default function OrderSummaryPanel({ schema, restaurants, menus, onCheckout, onRemoveOrderItem, onUpdateOrderItemQty }) {
   const [copied, setCopied] = useState(false)
   const [groupingStrategy, setGroupingStrategy] = useState('by_person')
 
@@ -58,24 +59,44 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
       for (const it of items) {
         const key = it.person_name || 'Unknown'
         if (!groups[key]) {
-          groups[key] = { rid: key, name: key, items: [], subtotal: 0 }
+          groups[key] = { rid: key, name: key, items: [], subtotal: 0, delivery: 0 }
         }
         groups[key].items.push(it)
         groups[key].subtotal += it.line_total || 0
+      }
+      // Sum delivery fees for each unique restaurant a person ordered from
+      for (const g of Object.values(groups)) {
+        const restaurantIds = new Set(g.items.map((it) => it.restaurant_id).filter(Boolean))
+        let personDelivery = 0
+        for (const rid of restaurantIds) {
+          const entry = breakdown.find((b) => b.restaurant_id === rid)
+          personDelivery += entry?.delivery_fee || 0
+        }
+        g.delivery = personDelivery
       }
     } else {
       for (const it of items) {
         const rid = it.restaurant_id || 'unknown'
         if (!groups[rid]) {
-          groups[rid] = { rid, name: it.restaurant_name || 'Unknown', items: [], subtotal: 0 }
+          groups[rid] = { rid, name: it.restaurant_name || 'Unknown', items: [], subtotal: 0, delivery: 0 }
         }
         groups[rid].items.push(it)
         groups[rid].subtotal += it.line_total || 0
+      }
+      for (const g of Object.values(groups)) {
+        const entry = breakdown.find((b) => b.restaurant_id === g.rid)
+        g.delivery = entry?.delivery_fee || 0
       }
     }
     return Object.values(groups)
   }
   const groups = isEmpty ? [] : getGroups()
+
+  // Compute overall order timing
+  const orderTiming = useMemo(() => {
+    if (!menus || !restaurants || items.length === 0) return []
+    return calculateOrderTiming(items, menus, restaurants)
+  }, [items, menus, restaurants])
 
   const handleCopy = () => {
     const lines = ["Order Summary"]
@@ -140,7 +161,6 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
           <div className="border border-[#F0E8E2] rounded-xl overflow-hidden" id="orderSummaryPanel">
             {groups.map(g => {
               const isPersonMode = groupingStrategy === 'by_person'
-              const fee = isPersonMode ? 0 : (breakdown.find(b => b.restaurant_id === g.rid)?.delivery_fee || 0)
               return (
                 <div key={g.rid} className="border-b border-[#F0E8E2] last:border-b-0">
                   <div className="px-5 py-3 bg-[#FFF9F5]">
@@ -162,15 +182,29 @@ export default function OrderSummaryPanel({ schema, onCheckout, onRemoveOrderIte
                     <span className="text-[#9C8E84]">Subtotal</span>
                     <span className="text-[#1A120D] font-semibold tabular-nums">{formatIDR(g.subtotal)}</span>
                   </div>
-                  {!isPersonMode && (
-                    <div className="px-5 py-1 flex justify-between text-[13px]">
-                      <span className="text-[#9C8E84]">Delivery</span>
-                      <span className="text-[#1A120D] font-semibold tabular-nums">{formatIDR(fee)}</span>
-                    </div>
-                  )}
+                  <div className="px-5 py-1 flex justify-between text-[13px]">
+                    <span className="text-[#9C8E84]">Delivery</span>
+                    <span className="text-[#1A120D] font-semibold tabular-nums">{formatIDR(g.delivery)}</span>
+                  </div>
                 </div>
               )
             })}
+          </div>
+        )}
+
+        {/* Estimated timing */}
+        {!isEmpty && orderTiming.length > 0 && (
+          <div className="mt-5 pt-4 border-t border-[#F0E8E2]">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock size={15} className="text-[#9C8E84]" />
+              <span className="text-[14px] font-semibold text-[#1A120D]">Estimated Arrival</span>
+            </div>
+            {orderTiming.map((t) => (
+              <div key={t.restaurant_id} className="flex justify-between text-[13px] mb-1">
+                <span className="text-[#5C4F48]">{t.restaurant_name === t.restaurant_id ? 'Delivery' : t.restaurant_name}</span>
+                <span className="font-medium text-[#1A120D] tabular-nums">{formatTimingRange(t.minMinutes, t.maxMinutes)}</span>
+              </div>
+            ))}
           </div>
         )}
 

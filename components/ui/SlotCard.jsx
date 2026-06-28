@@ -102,8 +102,11 @@ export default function SlotCard({
   const selectedOption =
     resolvedOptions.find((o) => o.option_id === selectedOptionId) || resolvedOptions[0];
 
-  const optionTotal =
-    (selectedOption?.subtotal || 0) + (selectedOption?.delivery_fee || 0);
+  const liveSubtotal = (selectedOption?.resolvedItems || []).reduce(
+    (sum, item) => sum + (item.lineTotal || (item.price || 0) * (item.quantity || 1)),
+    0
+  );
+  const optionTotal = liveSubtotal + (selectedOption?.delivery_fee || 0);
 
   const currentItemIds = new Set(
     (selectedOption?.resolvedItems || []).map((i) => i.item_id || i.id)
@@ -139,19 +142,12 @@ export default function SlotCard({
     });
   };
 
-  function formatArrivalTime(arrival) {
-    if (!arrival) return null;
-    // Try parsing as ISO 8601
-    const date = new Date(arrival);
-    if (!isNaN(date.getTime())) {
-      return date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      });
-    }
-    // Fallback for non-ISO strings
-    return arrival;
+  /** Render a friendly delivery duration range based on prep + delivery times */
+  function formatArrivalTime(timing) {
+    if (!timing || typeof timing.minMinutes !== 'number') return null;
+    const { minMinutes, maxMinutes } = timing;
+    if (minMinutes === maxMinutes) return `${minMinutes} mins`;
+    return `${minMinutes}–${maxMinutes} mins`;
   }
 
   return (
@@ -196,8 +192,8 @@ export default function SlotCard({
                   {selectedOption.restaurant?.cuisine}
                 </p>
                 {selectedOption.highlight_reason && (
-                  <p className="text-[13px] text-[#22A65E] mt-2 font-medium bg-[#F0FDF4] inline-block px-2.5 py-1 rounded-full">
-                    {selectedOption.highlight_reason}
+                  <p className="text-[13px] text-[#5C4F48] mt-2 font-medium italic border-l-2 border-[#E0D4CA] pl-3">
+                    "{selectedOption.highlight_reason}"
                   </p>
                 )}
               </div>
@@ -213,10 +209,10 @@ export default function SlotCard({
 
             {/* Delivery time row */}
             <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#F0E8E2]">
-              {selectedOption.estimated_arrival && (
+              {(selectedOption.timing || slot.timing) && (
                 <div className="flex items-center gap-1.5 text-[13px] text-[#5C4F48]">
                   <Clock size={14} className="text-[#9C8E84]" />
-                  <span>Est. {formatArrivalTime(selectedOption.estimated_arrival)}</span>
+                  <span>{formatArrivalTime(selectedOption.timing || slot.timing)}</span>
                 </div>
               )}
               {selectedOption.restaurant?.location?.address && (
@@ -250,23 +246,12 @@ export default function SlotCard({
             ))}
           </div>
 
-          {/* Add all to order button */}
-          <div className="mt-5">
-            <button
-              onClick={handleAddAll}
-              className="w-full flex items-center justify-center gap-2 text-[14px] font-semibold text-white bg-[#E8521A] hover:bg-[#D4491A] active:scale-[0.98] transition-all duration-200 rounded-xl px-4 py-3 shadow-soft"
-            >
-              <ShoppingCart size={16} />
-              <span>Add all {(selectedOption.resolvedItems || []).length} items to order</span>
-            </button>
-          </div>
-
           {/* Price summary */}
           <div className="mt-5 pt-4 border-t border-[#F0E8E2]">
             <div className="flex justify-between text-[14px] mb-2">
               <span className="text-[#9C8E84]">Item subtotal</span>
               <span className="font-medium tabular-nums text-[#1A120D]">
-                {formatIDR(selectedOption.subtotal || 0)}
+                {formatIDR(liveSubtotal)}
               </span>
             </div>
             <div className="flex justify-between text-[14px] mb-2">
@@ -279,6 +264,17 @@ export default function SlotCard({
               <span className="text-[#1A120D]">Total</span>
               <span className="tabular-nums">{formatIDR(optionTotal)}</span>
             </div>
+          </div>
+
+          {/* Add all to order button */}
+          <div className="mt-5">
+            <button
+              onClick={handleAddAll}
+              className="w-full flex items-center justify-center gap-2 text-[14px] font-semibold text-white bg-[#E8521A] hover:bg-[#D4491A] active:scale-[0.98] transition-all duration-200 rounded-xl px-4 py-3 shadow-soft"
+            >
+              <ShoppingCart size={16} />
+              <span>Add all {(selectedOption.resolvedItems || []).length} items to order</span>
+            </button>
           </div>
 
           {/* Browse more from this restaurant */}

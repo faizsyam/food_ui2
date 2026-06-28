@@ -140,6 +140,8 @@ export default function LayoutShell({
             <div className="lg:sticky lg:top-[120px]">
               <OrderSummaryPanel
                 schema={schema}
+                restaurants={restaurants}
+                menus={menus}
                 onCheckout={onCheckout}
                 onRemoveOrderItem={onRemoveOrderItem}
                 onUpdateOrderItemQty={onUpdateOrderItemQty}
