@@ -116,7 +116,7 @@ export default async function handler(req, res) {
 
   try {
     // Read request body
-    const { request: userRequest } = req.body || {};
+    const { request: userRequest, previousSchema } = req.body || {};
     if (!userRequest || typeof userRequest !== 'string') {
       return res.status(400).json({ error: 'Missing or invalid "request" field' });
     }
@@ -135,7 +135,8 @@ export default async function handler(req, res) {
 
     // Build the AI prompt
     const systemPrompt = AGENT_PROMPT;
-    const userMessage = [
+
+    let userMessageParts = [
       '## Restaurants',
       JSON.stringify(restaurants, null, 2),
       '',
@@ -145,9 +146,24 @@ export default async function handler(req, res) {
       '## Current timestamp',
       new Date().toISOString(),
       '',
-      '## User Request',
-      userRequest,
-    ].join('\n');
+    ];
+
+    if (previousSchema && typeof previousSchema === 'object') {
+      userMessageParts = userMessageParts.concat([
+        '## Previous Order Schema',
+        JSON.stringify(previousSchema),
+        '',
+        '## Refinement Instruction',
+        userRequest,
+      ]);
+    } else {
+      userMessageParts = userMessageParts.concat([
+        '## User Request',
+        userRequest,
+      ]);
+    }
+
+    const userMessage = userMessageParts.join('\n');
 
     // Call the AI API via NVIDIA NIM
     const apiKey = process.env.NVIDIA_API_KEY;
@@ -265,20 +281,7 @@ export default async function handler(req, res) {
       );
     }
 
-    // 3. Recompute checkout_ready and blocking_issues
-    const blockingCodes =
-      Array.isArray(parsedSchema.warnings)
-        ? parsedSchema.warnings
-            .filter((w) => w.severity === 'blocking')
-            .map((w) => w.code)
-        : [];
-
-    if (parsedSchema.order_summary) {
-      parsedSchema.order_summary.checkout_ready = blockingCodes.length === 0;
-      parsedSchema.order_summary.blocking_issues = blockingCodes;
-    }
-
-    // 4. Recalculate timing for each option based on real menu prep timesrefer amount time data
+    // 4. Recalculate timing and meets_min_order for each option based on real data
     if (Array.isArray(parsedSchema.slots)) {
       for (const slot of parsedSchema.slots) {
         if (!Array.isArray(slot.options)) continue;
@@ -299,15 +302,124 @@ export default async function handler(req, res) {
             const now = new Date();
             const minArrival = new Date(now.getTime() + minMinutes * 60000).toISOString();
             option.estimated_arrival = minArrival;
-
-            // Also update the slot-level delivery.estimated_arrival if this is the selected option
-            if (slot.selected_option_id === option.option_id && slot.delivery) {
-              slot.delivery.estimated_arrival = minArrival;
-            }
           }
+
+          // Recompute meets_min_order after timing/prep recalculation
+          option.meets_min_order = option.subtotal >= (restaurant?.min_order || 0);
         }
       }
     }
+
+    // 5. Re-validate selected_option_id against Option Selection Priority
+    // If the originally selected option's meets_min_order flipped to false,
+    // or its meets_preferences is false while a sibling has true,
+    // auto-reassign to the best qualifying sibling.
+    if (Array.isArray(parsedSchema.slots)) {
+      for (const slot of parsedSchema.slots) {
+        if (!Array.isArray(slot.options) || !slot.selected_option_id) continue;
+
+        const selectedOpt = slot.options.find((o) => o.option_id === slot.selected_option_id);
+        if (!selectedOpt) continue;
+
+        let betterSibling = null;
+        let reason = '';
+
+        // Priority 1: preference correctness (if selected fails but a sibling passes)
+        if (selectedOpt.meets_preferences === false) {
+          betterSibling = slot.options.find(
+            (o) => o.option_id !== slot.selected_option_id && o.meets_preferences === true
+          );
+          if (betterSibling) {
+            reason = 'to match all stated preferences';
+          }
+        }
+
+        // Priority 2: meets_min_order (if selected fails but a sibling passes)
+        if (!betterSibling && selectedOpt.meets_min_order === false) {
+          betterSibling = slot.options.find(
+            (o) => o.option_id !== slot.selected_option_id && o.meets_min_order === true
+          );
+          if (betterSibling) {
+            reason = 'to meet minimum order';
+          }
+        }
+
+        if (betterSibling) {
+          const oldLabel = selectedOpt.label || selectedOpt.option_id;
+          const newLabel = betterSibling.label || betterSibling.option_id;
+          slot.selected_option_id = betterSibling.option_id;
+          if (!Array.isArray(parsedSchema.warnings)) parsedSchema.warnings = [];
+          parsedSchema.warnings.push({
+            code: 'AUTO_REASSIGNED_OPTION',
+            message: `Automatically switched ${slot.person?.name || 'this slot'} from "${oldLabel}" to "${newLabel}" ${reason}.`,
+            severity: 'info',
+            related_slot_ids: [slot.slot_id],
+            suggestion: `The original option no longer qualified after recalculation — a better sibling option was chosen instead.`
+          });
+        }
+      }
+    }
+
+    // 6. Mirror selected option's estimated_arrival into slot.delivery.estimated_arrival
+    if (Array.isArray(parsedSchema.slots)) {
+      for (const slot of parsedSchema.slots) {
+        if (!slot.selected_option_id || !Array.isArray(slot.options) || !slot.delivery) continue;
+        const selectedOpt = slot.options.find((o) => o.option_id === slot.selected_option_id);
+        if (selectedOpt?.estimated_arrival) {
+          slot.delivery.estimated_arrival = selectedOpt.estimated_arrival;
+        }
+      }
+    }
+
+    // 7. Recompute order_summary from actual post-processed slots after all adjustments.
+    // The AI may have computed order_summary before we reassigned selected_option_id
+    // or recalculated timing, so we rebuild it from the actual selected options.
+    const restaurantMap = new Map();
+    let aiGrandTotal = 0;
+
+    if (Array.isArray(parsedSchema.slots)) {
+      for (const slot of parsedSchema.slots) {
+        if (!slot.selected_option_id || !Array.isArray(slot.options)) continue;
+        const opt = slot.options.find((o) => o.option_id === slot.selected_option_id);
+        if (!opt) continue;
+
+        const rid = opt.restaurant_id;
+        if (!restaurantMap.has(rid)) {
+          restaurantMap.set(rid, {
+            restaurant_id: rid,
+            slot_ids: [],
+            items_subtotal: 0,
+            delivery_fee: opt.delivery_fee || 0,
+            min_order: (restaurants.find((r) => r.id === rid) || {}).min_order || 0,
+            meets_min_order: true,
+          });
+        }
+        const entry = restaurantMap.get(rid);
+        entry.slot_ids.push(slot.slot_id);
+        entry.items_subtotal += opt.subtotal || 0;
+        entry.meets_min_order = entry.items_subtotal >= entry.min_order;
+        aiGrandTotal += (opt.subtotal || 0) + (opt.delivery_fee || 0);
+      }
+    }
+
+    const blockingCodes =
+      Array.isArray(parsedSchema.warnings)
+        ? parsedSchema.warnings
+            .filter((w) => w.severity === 'blocking')
+            .map((w) => w.code)
+        : [];
+
+    // Build or overwrite order_summary to match actual slots
+    parsedSchema.order_summary = {
+      ...parsedSchema.order_summary,
+      restaurant_breakdown: Array.from(restaurantMap.values()).map((e) => ({
+        ...e,
+        slot_ids: e.slot_ids,
+      })),
+      grand_total: aiGrandTotal,
+      checkout_ready: blockingCodes.length === 0,
+      blocking_issues: blockingCodes,
+    };
 
     // Log the generated schema for debugging
     console.log('[generate-schema] Parsed schema:', JSON.stringify(parsedSchema, null, 2));

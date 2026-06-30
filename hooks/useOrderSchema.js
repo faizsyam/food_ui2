@@ -7,7 +7,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 import schemaReducer from '../lib/schemaReducer';
-import { getCachedSchema, saveCachedSchema } from '../lib/recentRequests';
+import { getCachedSchema, saveCachedSchema, saveRequest } from '../lib/recentRequests';
 
 /**
  * @param {Array} restaurants — full restaurants array (for potential future use)
@@ -19,6 +19,7 @@ export default function useOrderSchema(restaurants, menus) {
   const [schema, setSchema] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [history, setHistory] = useState([]);
 
   // Track the last request to avoid duplicate submissions
   const lastRequestRef = useRef(null);
@@ -33,25 +34,33 @@ export default function useOrderSchema(restaurants, menus) {
   //
   // submitRequest — POST to AI agent (or load from cache) and set the returned schema
   //
-  const submitRequest = useCallback(async (userRequestString) => {
+  const submitRequest = useCallback(async (userRequestString, currentSchema = null) => {
     if (!userRequestString || !userRequestString.trim()) {
       setError('Request cannot be empty');
       return;
     }
 
-    // Skip duplicate requests
-    if (lastRequestRef.current === userRequestString) {
+    // Skip duplicate requests (only for initial requests without previousSchema)
+    if (!currentSchema && lastRequestRef.current === userRequestString) {
       return;
     }
 
     lastRequestRef.current = userRequestString;
 
-    // Check local cache before hitting the AI
-    const cached = getCachedSchema(userRequestString);
-    if (cached) {
-      setSchema(cached);
-      setError(null);
-      return;
+    // For refinements (when previousSchema is provided), skip cache entirely
+    // since results depend on context
+    if (!currentSchema) {
+      const cached = getCachedSchema(userRequestString);
+      if (cached) {
+        setSchema(cached);
+        setError(null);
+        // Still update history for completeness
+        setHistory((prev) => [
+          { request: userRequestString, schema: cached, timestamp: new Date() },
+          ...prev,
+        ]);
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -63,7 +72,10 @@ export default function useOrderSchema(restaurants, menus) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ request: userRequestString }),
+        body: JSON.stringify({
+          request: userRequestString,
+          previousSchema: currentSchema,
+        }),
       });
 
       if (!response.ok) {
@@ -90,8 +102,18 @@ export default function useOrderSchema(restaurants, menus) {
         throw new Error('Invalid schema returned');
       }
 
+      // Update state
       setSchema(data.schema);
-      saveCachedSchema(userRequestString, data.schema);
+      setHistory((prev) => [
+        { request: userRequestString, schema: data.schema, timestamp: new Date() },
+        ...prev,
+      ]);
+
+      // Only save to localStorage on the first submit (not refinements)
+      if (!currentSchema) {
+        saveRequest(userRequestString);
+        saveCachedSchema(userRequestString, data.schema);
+      }
     } catch (err) {
       setError(err.message || 'An unexpected error occurred');
     } finally {
@@ -100,17 +122,19 @@ export default function useOrderSchema(restaurants, menus) {
   }, []);
 
   //
-  // reset — clear schema back to null
+  // reset — clear schema and history
   //
   const reset = useCallback(() => {
     setSchema(null);
     setError(null);
     setIsLoading(false);
+    setHistory([]);
     lastRequestRef.current = null;
   }, []);
 
   return {
     schema,
+    history,
     isLoading,
     error,
     submitRequest,

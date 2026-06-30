@@ -1,16 +1,16 @@
-import { AlertTriangle, Info, X } from 'lucide-react';
+import { AlertTriangle, Info, X, RefreshCw } from 'lucide-react';
 
 export default function WarningBanner({ warning, onDismiss, onClick }) {
   if (!warning) return null;
 
-  const { code, message, severity } = warning;
+  const { code, message, severity, suggestion } = warning;
   const isBlocking = severity === 'blocking';
 
   const containerClass = isBlocking
     ? 'bg-[#FEF2F2] border-[#FECACA] text-[#E11D48]'
     : 'bg-[#FFF9F5] border-[#F0E8E2] text-[#B45309]';
 
-  const Icon = isBlocking ? AlertTriangle : Info;
+  const Icon = isBlocking ? AlertTriangle : code === 'AUTO_REASSIGNED_OPTION' ? RefreshCw : Info;
 
   return (
     <div
@@ -26,6 +26,11 @@ export default function WarningBanner({ warning, onDismiss, onClick }) {
             </p>
           )}
           {message && <p className="text-[14px] mt-0.5">{message}</p>}
+          {suggestion && (
+            <p className="text-[13px] mt-1 opacity-80 leading-relaxed">
+              <span className="font-semibold">Suggestion:</span> {suggestion}
+            </p>
+          )}
         </div>
       </div>
       {onDismiss && (

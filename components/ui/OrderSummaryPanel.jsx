@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react"
-import { Copy, Check, Truck, Plus, Trash2, ShoppingCart, User, Store, Clock } from "lucide-react"
+import { Copy, Check, Truck, Trash2, ShoppingCart, User, Store, Clock, Calendar, Users, Sparkles } from "lucide-react"
 import { formatIDR } from "../../lib/format"
 import { formatTimingRange, calculateOrderTiming } from "../../lib/timing"
 
@@ -38,20 +38,27 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
   const order = schema.order || { items: [] }
   const items = order.items || []
   const isEmpty = items.length === 0
-  const orderSummary = schema.order_summary || {}
+
+  // When cart has items, use the computed cart_summary (from OrderRenderer).
+  // When the cart is empty, fall back to the AI's original order_summary.
+  const activeSummary = !isEmpty && schema.cart_summary ? schema.cart_summary : (schema.order_summary || {})
+  const aiSummary = schema.order_summary || {}
   const constraints = schema.constraints || {}
 
   const budgetLimit = (constraints.total_budget)
   const headcount = (constraints.headcount) || 0
 
-  const grandTotal = (orderSummary.grand_total) || 0
-  const breakdown = orderSummary.restaurant_breakdown || []
-  const checkoutReady = (orderSummary.checkout_ready) || false
-  const blockingIssues = orderSummary.blocking_issues || []
+  const grandTotal = (activeSummary.grand_total) || 0
+  const breakdown = activeSummary.restaurant_breakdown || []
+  const checkoutReady = (activeSummary.checkout_ready) || false
+  const blockingIssues = activeSummary.blocking_issues || []
 
   const progress = budgetLimit ? Math.min((grandTotal / budgetLimit) * 100, 100) : 0
   const over = budgetLimit ? grandTotal > budgetLimit : false
   const near = budgetLimit ? !over && progress >= 85 : false
+
+  // Non-budget constraints to display as context chips (omit total_budget, headcount is shown separately)
+  const nonBudgetConstraints = Object.entries(constraints).filter(([k]) => k !== 'total_budget')
 
   const getGroups = () => {
     const groups = {}
@@ -98,6 +105,9 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
     return calculateOrderTiming(items, menus, restaurants)
   }, [items, menus, restaurants])
 
+  // Check if AI has a meaningful order summary to display when the cart is empty
+  const hasAiSummary = (aiSummary.restaurant_breakdown || []).length > 0 || (aiSummary.grand_total || 0) > 0
+
   const handleCopy = () => {
     const lines = ["Order Summary"]
     for (const g of groups) {
@@ -113,40 +123,93 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const restaurantMap = restaurants ? new Map(restaurants.map((r) => [r.id, r])) : new Map()
+
   return (
     <div className="bg-white border border-[#F0E8E2] rounded-2xl overflow-hidden shadow-card">
       <div className="p-5">
         {/* Title + grouping toggle */}
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-[17px] font-bold text-[#1A120D]">Order Summary</h2>
-          <div className="flex items-center gap-1.5 bg-[#FFF9F5] border border-[#F0E8E2] rounded-xl p-0.5">
-            <button
-              onClick={() => setGroupingStrategy('by_person')}
-              className={`px-3 py-1.5 text-[12px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1 ${
-                groupingStrategy === 'by_person'
-                  ? 'bg-white text-[#E8521A] shadow-soft'
-                  : 'text-[#9C8E84] hover:text-[#5C4F48]'
-              }`}
-            >
-              <User size={12} />
-              Person
-            </button>
-            <button
-              onClick={() => setGroupingStrategy('by_restaurant')}
-              className={`px-3 py-1.5 text-[12px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1 ${
-                groupingStrategy === 'by_restaurant'
-                  ? 'bg-white text-[#E8521A] shadow-soft'
-                  : 'text-[#9C8E84] hover:text-[#5C4F48]'
-              }`}
-            >
-              <Store size={12} />
-              Restaurant
-            </button>
+          <div className="flex items-center gap-2">
+            <h2 className="text-[17px] font-bold text-[#1A120D]">
+              {isEmpty ? "AI Recommended" : "Order Summary"}
+            </h2>
+            {isEmpty && hasAiSummary && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#F0FDF4] text-[#16A34A] text-[10px] font-bold uppercase tracking-wide border border-[#DCFCE7]">
+                <Sparkles size={10} className="fill-[#22C55E]" />
+                AI
+              </span>
+            )}
           </div>
+          {!isEmpty && (
+            <div className="flex items-center gap-1.5 bg-[#FFF9F5] border border-[#F0E8E2] rounded-xl p-0.5">
+              <button
+                onClick={() => setGroupingStrategy('by_person')}
+                className={`px-3 py-1.5 text-[12px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1 ${
+                  groupingStrategy === 'by_person'
+                    ? 'bg-white text-[#E8521A] shadow-soft'
+                    : 'text-[#9C8E84] hover:text-[#5C4F48]'
+                }`}
+              >
+                <User size={12} />
+                Person
+              </button>
+              <button
+                onClick={() => setGroupingStrategy('by_restaurant')}
+                className={`px-3 py-1.5 text-[12px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1 ${
+                  groupingStrategy === 'by_restaurant'
+                    ? 'bg-white text-[#E8521A] shadow-soft'
+                    : 'text-[#9C8E84] hover:text-[#5C4F48]'
+                }`}
+              >
+                <Store size={12} />
+                Restaurant
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Empty state */}
-        {isEmpty && (
+        {/* Empty state or AI Recommended Summary */}
+        {isEmpty && hasAiSummary && (
+          <div className="space-y-4">
+            {aiSummary.restaurant_breakdown.map((entry) => {
+              const restaurant = restaurantMap.get(entry.restaurant_id)
+              const totalForRestaurant = (entry.items_subtotal || 0) + (entry.delivery_fee || 0)
+              return (
+                <div key={entry.restaurant_id} className="bg-[#FFF9F5] rounded-xl p-4 border border-[#F0E8E2]">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[14px] font-bold text-[#1A120D]">{restaurant?.name || entry.restaurant_id}</span>
+                        {restaurant?.cuisine && (
+                          <span className="text-[11px] font-semibold text-[#9C8E84]">{restaurant.cuisine}</span>
+                        )}
+                      </div>
+                      <p className="text-[12px] text-[#9C8E84] mt-0.5">
+                        {Array.isArray(entry.slot_ids) ? `${entry.slot_ids.length} ${entry.slot_ids.length === 1 ? 'order' : 'orders'}` : ''}
+                      </p>
+                      {entry.meets_min_order === false && (
+                        <p className="text-[12px] text-[#E11D48] font-medium mt-1">
+                          Below minimum order of {formatIDR(entry.min_order || 0)}
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-[14px] font-bold text-[#1A120D] tabular-nums">
+                        {formatIDR(totalForRestaurant)}
+                      </p>
+                      <p className="text-[11px] text-[#9C8E84] tabular-nums mt-0.5">
+                        {formatIDR(entry.items_subtotal || 0)} + {formatIDR(entry.delivery_fee || 0)} delivery
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {isEmpty && !hasAiSummary && (
           <div className="text-center py-10">
             <div className="w-14 h-14 bg-[#FFF9F5] rounded-2xl flex items-center justify-center mx-auto mb-4">
               <ShoppingCart size={28} className="text-[#E0D4CA]" />
@@ -209,7 +272,7 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
         )}
 
         {/* Price totals */}
-        {!isEmpty && (
+        {(hasAiSummary || !isEmpty) && (
           <div className="mt-5 pt-4 border-t border-[#F0E8E2]">
             <div className="flex justify-between text-[15px] font-bold">
               <span className="text-[#1A120D]">Grand Total</span>
@@ -219,7 +282,7 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
         )}
 
         {/* Budget */}
-        {budgetLimit && !isEmpty && (
+        {budgetLimit && (hasAiSummary || !isEmpty) && (
           <div className="mt-5">
             <div className="w-full h-2.5 bg-[#F0E8E2] rounded-full overflow-hidden">
               <div className={`h-full rounded-full transition-all duration-500 ${over ? "bg-[#E11D48]" : near ? "bg-[#D97706]" : "bg-[#22A65E]"}`} style={{width: Math.min(progress, 100) + "%"}} />
@@ -234,7 +297,24 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
           </div>
         )}
 
-        {/* Constraints */}
+        {/* Constraints context chips */}
+        {nonBudgetConstraints.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {nonBudgetConstraints.map(([key, value]) => (
+              <span
+                key={key}
+                className="inline-flex items-center gap-1.5 text-[12px] px-2.5 py-1 rounded-full bg-[#F0F9F4] text-[#1A8246] border border-[#DCFCE7] font-medium"
+              >
+                {key === 'headcount' && <Users size={12} />}
+                {key === 'occasion' && <Calendar size={12} />}
+                <span className="capitalize">{key.replace(/_/g, ' ')}:</span>
+                <span className="font-semibold">{String(value)}</span>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Budget / headcount note */}
         {budgetLimit && (
           <div className="mt-2 text-[12px] text-[#B5A99F]">
             Budget: {formatIDR(budgetLimit)} {headcount > 0 ? `(${formatIDR(budgetLimit / headcount)} per person)` : ""}

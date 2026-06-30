@@ -79,7 +79,11 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
 
   const liveSchema = useMemo(() => {
     if (!schema) return null;
-    return { ...schema, order_summary: recomputeOrderSummary(schema, restaurants) };
+    const cartSummary = recomputeOrderSummary(schema, restaurants);
+    // Preserve the AI's original order_summary and add cart_summary separately.
+    // LayoutShell/OrderSummaryPanel will show AI summary when cart is empty,
+    // and cart-based totals once the user adds items.
+    return { ...schema, cart_summary: cartSummary };
   }, [schema, restaurants]);
 
   const handleItemQuantityChange = useCallback((slotId, itemId, quantity) => {
@@ -136,6 +140,7 @@ export default function OrderRenderer({ schema: propSchema, restaurants, menus, 
         schema={liveSchema}
         restaurants={restaurants}
         menus={menus}
+        diff={liveSchema?.diff}
         onSchemaChange={handleSchemaChange}
         onItemQuantityChange={handleItemQuantityChange}
         onItemRemove={handleItemRemove}

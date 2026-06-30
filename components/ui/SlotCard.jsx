@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Star, Sparkles, Clock, Plus, ShoppingCart, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Star, Sparkles, Clock, Plus, ShoppingCart, ChevronDown, ChevronUp, MapPin, AlertCircle } from 'lucide-react';
 import PersonTag from './PersonTag';
 import ItemRow from './ItemRow';
 import { formatIDR } from '../../lib/format';
@@ -85,10 +85,53 @@ export default function SlotCard({
   onVariantChange,
   onSelectOption,
   onAddOrderItem,
+  onAddItem,
+  diff,
 }) {
   const resolvedOptions = slot.resolvedOptions || [];
   const selectedOptionId = slot.selected_option_id;
   const [showBrowseMore, setShowBrowseMore] = useState(false);
+
+  // Diff visual treatment state
+  const [isFadedIn, setIsFadedIn] = useState(false);
+  const [showNewPill, setShowNewPill] = useState(false);
+  const [showModifiedBorder, setShowModifiedBorder] = useState(false);
+  const prevDiffRef = useRef(null);
+
+  const isAdded =
+    diff?.added?.some((a) => a.slot_id === slot.slot_id) || false;
+
+  useEffect(() => {
+    if (!diff) return;
+    if (prevDiffRef.current === diff) return;
+    prevDiffRef.current = diff;
+
+    const wasAdded = diff.added?.some(
+      (a) => a.slot_id === slot.slot_id
+    );
+    const wasModified = diff.modified?.some(
+      (m) => m.slot_id === slot.slot_id
+    );
+
+    let newPillTimer = null;
+    let borderTimer = null;
+
+    if (wasAdded) {
+      requestAnimationFrame(() => setIsFadedIn(true));
+      setShowNewPill(true);
+      newPillTimer = setTimeout(() => setShowNewPill(false), 6000);
+    }
+
+    if (wasModified) {
+      setShowModifiedBorder(true);
+      borderTimer = setTimeout(() => setShowModifiedBorder(false), 4000);
+    }
+
+    return () => {
+      if (newPillTimer) clearTimeout(newPillTimer);
+      if (borderTimer) clearTimeout(borderTimer);
+    };
+  }, [diff, slot.slot_id]);
 
   if (!resolvedOptions || resolvedOptions.length === 0) {
     return (
@@ -150,8 +193,42 @@ export default function SlotCard({
     return `${minMinutes}–${maxMinutes} mins`;
   }
 
+  /** Format an ISO-8601 target_time as a human-readable wall-clock time */
+  function formatTargetTime(iso) {
+    if (!iso) return null;
+    try {
+      const d = new Date(iso);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    } catch {
+      return null;
+    }
+  }
+
+  // Inline style only for added slots (fade-in animation)
+  const cardStyle = isAdded
+    ? {
+        opacity: isFadedIn ? 1 : 0,
+        transform: isFadedIn ? 'translateY(0)' : 'translateY(-8px)',
+        transition: 'opacity 200ms ease-out, transform 200ms ease-out, box-shadow 300ms ease',
+      }
+    : undefined;
+
   return (
-    <div className="bg-white rounded-2xl border border-[#F0E8E2] overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300">
+    <div
+      className={`bg-white rounded-2xl border border-[#F0E8E2] overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300 ${
+        showModifiedBorder ? 'border-l-2 border-l-[#2563EB]' : ''
+      }`}
+      style={cardStyle}
+    >
+      {/* New pill */}
+      {showNewPill && (
+        <div className="flex justify-end px-6 pt-4 pb-0">
+          <span className="text-[11px] font-semibold text-white bg-[#16A34A] px-2.5 py-0.5 rounded-full transition-opacity duration-500">
+            New
+          </span>
+        </div>
+      )}
+
       {/* Option selector tabs */}
       {resolvedOptions.length > 1 && (
         <div className="px-6 pt-5">
@@ -159,19 +236,37 @@ export default function SlotCard({
             Meal Options for {slot.person?.name || 'Guest'}
           </p>
           <div className="flex flex-wrap gap-2">
-            {resolvedOptions.map((opt) => (
-              <button
-                key={opt.option_id}
-                onClick={() => onSelectOption?.(slot.slot_id, opt.option_id)}
-                className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold border transition-all duration-200 ${
-                  opt.option_id === selectedOptionId
-                    ? 'bg-[#1A120D] text-white border-[#1A120D]'
-                    : 'bg-white text-[#5C4F48] border-[#E0D4CA] hover:border-[#9C8E84]'
-                }`}
-              >
-                {opt.label || opt.option_id}
-              </button>
-            ))}
+            {resolvedOptions.map((opt) => {
+              const isSelected = opt.option_id === selectedOptionId;
+              const showWarning = !isSelected && (opt.meets_min_order === false || opt.deadline_ok === false || opt.meets_preferences === false);
+              let tooltip = '';
+              if (showWarning) {
+                const reasons = [];
+                if (opt.meets_preferences === false) reasons.push("Doesn't match preferences");
+                if (opt.meets_min_order === false) reasons.push('Below minimum order');
+                if (opt.deadline_ok === false) reasons.push("Won't meet your deadline");
+                tooltip = reasons.join(' and ');
+              }
+              return (
+                <button
+                  key={opt.option_id}
+                  onClick={() => onSelectOption?.(slot.slot_id, opt.option_id)}
+                  className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold border transition-all duration-200 ${
+                    isSelected
+                      ? 'bg-[#1A120D] text-white border-[#1A120D]'
+                      : 'bg-white text-[#5C4F48] border-[#E0D4CA] hover:border-[#9C8E84]'
+                  }`}
+                  title={tooltip || undefined}
+                >
+                  <span className="flex items-center gap-1">
+                    {opt.label || opt.option_id}
+                    {showWarning && (
+                      <AlertCircle size={14} className="text-[#D97706] shrink-0" />
+                    )}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -207,18 +302,36 @@ export default function SlotCard({
               </div>
             </div>
 
-            {/* Delivery time row */}
+            {/* Delivery info row */}
             <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#F0E8E2]">
+              {/* Estimated arrival (from option timing) */}
               {(selectedOption.timing || slot.timing) && (
                 <div className="flex items-center gap-1.5 text-[13px] text-[#5C4F48]">
                   <Clock size={14} className="text-[#9C8E84]" />
                   <span>{formatArrivalTime(selectedOption.timing || slot.timing)}</span>
                 </div>
               )}
-              {selectedOption.restaurant?.location?.address && (
+              {/* Target delivery time (user-specified) */}
+              {slot.delivery?.target_time && (
                 <div className="flex items-center gap-1.5 text-[13px] text-[#5C4F48]">
-                  <MapPin size={14} className="text-[#9C8E84]" />
-                  <span className="truncate max-w-[200px]">{selectedOption.restaurant.location.address}</span>
+                  <Clock size={14} className="text-[#E8521A]" />
+                  <span className="font-medium">Target: {formatTargetTime(slot.delivery.target_time)}</span>
+                </div>
+              )}
+              {/* Delivery address */}
+              {slot.delivery?.address && (
+                <div className="flex items-center gap-1.5 text-[13px] text-[#5C4F48]">
+                  <MapPin size={14} className="text-[#E8521A]" />
+                  <span className="truncate max-w-[200px]" title={slot.delivery.address}>
+                    {slot.delivery.address}
+                  </span>
+                </div>
+              )}
+              {/* AI estimated arrival (ISO format from slot.delivery) */}
+              {slot.delivery?.estimated_arrival && !slot.delivery?.target_time && (
+                <div className="flex items-center gap-1.5 text-[13px] text-[#5C4F48]">
+                  <Clock size={14} className="text-[#9C8E84]" />
+                  <span>Arrives {formatTargetTime(slot.delivery.estimated_arrival)}</span>
                 </div>
               )}
             </div>

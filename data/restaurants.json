@@ -12,7 +12,6 @@
     "delivery_time_minutes": 25,
     "delivery_fee": 5000,
     "min_order": 25000,
-    "is_open": true,
     "tags": ["budget-friendly", "halal", "home-style", "warung", "family portions", "fast service"]
   },
   {
@@ -28,7 +27,6 @@
     "delivery_time_minutes": 35,
     "delivery_fee": 12000,
     "min_order": 50000,
-    "is_open": true,
     "tags": ["modern indonesian", "halal", "premium", "instagrammable", "date night", "spicy options"]
   },
   {
@@ -44,7 +42,6 @@
     "delivery_time_minutes": 30,
     "delivery_fee": 10000,
     "min_order": 40000,
-    "is_open": true,
     "tags": ["ramen", "comfort food", "rich broth", "late night", "popular with students", "halal-friendly options"]
   },
   {
@@ -60,7 +57,6 @@
     "delivery_time_minutes": 40,
     "delivery_fee": 15000,
     "min_order": 75000,
-    "is_open": true,
     "tags": ["premium", "sushi", "business lunch", "fresh seafood", "set meals", "contains raw fish"]
   },
   {
@@ -76,7 +72,6 @@
     "delivery_time_minutes": 20,
     "delivery_fee": 8000,
     "min_order": 30000,
-    "is_open": true,
     "tags": ["burgers", "fast casual", "budget-friendly", "comfort food", "open late"]
   },
   {
@@ -92,7 +87,6 @@
     "delivery_time_minutes": 25,
     "delivery_fee": 10000,
     "min_order": 35000,
-    "is_open": true,
     "tags": ["healthy options", "vegetarian-friendly", "low calorie", "salads", "smoothies", "gluten-free options"]
   },
   {
@@ -108,7 +102,6 @@
     "delivery_time_minutes": 35,
     "delivery_fee": 9000,
     "min_order": 40000,
-    "is_open": false,
     "tags": ["peranakan", "chinese-indonesian", "family portions", "comfort food", "rich flavors", "contains pork options"]
   },
   {
@@ -124,7 +117,6 @@
     "delivery_time_minutes": 30,
     "delivery_fee": 9000,
     "min_order": 35000,
-    "is_open": true,
     "tags": ["halal", "indian", "spicy", "vegetarian options", "curry", "naan", "family portions"]
   },
   {
@@ -140,7 +132,6 @@
     "delivery_time_minutes": 35,
     "delivery_fee": 11000,
     "min_order": 50000,
-    "is_open": true,
     "tags": ["korean bbq", "spicy", "group dining", "trendy", "grilled", "contains pork options"]
   },
   {
@@ -156,7 +147,6 @@
     "delivery_time_minutes": 20,
     "delivery_fee": 7000,
     "min_order": 25000,
-    "is_open": true,
     "tags": ["all-day breakfast", "dessert", "coffee", "brunch spot", "halal", "instagrammable", "light bites"]
   }
 ]

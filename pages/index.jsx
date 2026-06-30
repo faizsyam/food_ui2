@@ -5,7 +5,7 @@ import Navbar from '../components/layout/Navbar';
 import HeroSection from '../components/layout/HeroSection';
 import HowItWorksSection from '../components/layout/HowItWorksSection';
 import RequestInput from '../components/RequestInput';
-import { OrderConfirmation } from '../components/ui';
+import { OrderConfirmation, QueryBar } from '../components/ui';
 import restaurants from '../data/restaurants.json';
 import menus from '../data/menus.json';
 
@@ -20,6 +20,7 @@ const VIEWS = {
 export default function HomePage() {
   const {
     schema,
+    history,
     isLoading,
     error,
     submitRequest,
@@ -44,6 +45,11 @@ export default function HomePage() {
     await submitRequest(requestText);
   }, [submitRequest]);
 
+  const handleRefinement = useCallback((text) => {
+    if (!text.trim()) return;
+    submitRequest(text, schema);
+  }, [submitRequest, schema]);
+
   const handleStartOver = useCallback(() => {
     reset();
     setConfirmedSchema(null);
@@ -67,14 +73,21 @@ export default function HomePage() {
 
       <main>
         <HeroSection isCompact={isResult}>
-          <RequestInput
-            onSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
+          <RequestInput onSubmit={handleSubmit} isLoading={isLoading} />
           {error && currentView === VIEWS.ERROR && (
             <p className="mt-3 text-[14px] text-[#DC2626]">{error}</p>
           )}
         </HeroSection>
+
+        {/* Conversational refinement input (visible when results exist) */}
+        {schema && currentView !== VIEWS.IDLE && currentView !== VIEWS.CONFIRMED && (
+          <QueryBar
+            currentRequest={history[0]?.request || ''}
+            history={history}
+            onSubmit={handleRefinement}
+            isLoading={isLoading}
+          />
+        )}
 
         {currentView === VIEWS.CONFIRMED && (
           <OrderConfirmation
@@ -84,7 +97,8 @@ export default function HomePage() {
           />
         )}
 
-        {currentView === VIEWS.RESULT && hasResults && (
+        {/* Show results during RESULT and LOADING (for refinement) */}
+        {hasResults && (currentView === VIEWS.RESULT || currentView === VIEWS.LOADING) && (
           <OrderRenderer
             schema={schema}
             restaurants={restaurants}

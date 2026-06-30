@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import SlotCard from './SlotCard';
 import WarningBanner from './WarningBanner';
 import SharedRequirementsBar from './SharedRequirementsBar';
@@ -41,6 +41,7 @@ export default function LayoutShell({
   onRemoveOrderItem,
   onUpdateOrderItemQty,
   onCheckout,
+  diff,
 }) {
   if (!schema) return null;
 
@@ -51,6 +52,19 @@ export default function LayoutShell({
     if (a.severity !== 'blocking' && b.severity === 'blocking') return 1;
     return 0;
   });
+
+  // Rejected instructions from diff
+  const rejectedEntries = diff?.rejected || [];
+  const rejectedMessage = rejectedEntries.map((r) => r.reason).join(' ');
+  const [dismissedRejected, setDismissedRejected] = useState(false);
+  const prevDiffRef = React.useRef(null);
+
+  useEffect(() => {
+    if (diff && prevDiffRef.current !== diff) {
+      prevDiffRef.current = diff;
+      setDismissedRejected(false);
+    }
+  }, [diff]);
 
   // Left section always groups by person at the top level
   function buildGroups() {
@@ -84,6 +98,16 @@ export default function LayoutShell({
           <div className="flex-1 min-w-0">
             {shared_requirements.length > 0 && (
               <SharedRequirementsBar requirements={shared_requirements} warnings={warnings} />
+            )}
+
+            {/* Rejected instructions from diff */}
+            {rejectedEntries.length > 0 && !dismissedRejected && (
+              <div className="mb-4" role="region" aria-label="Rejected instructions">
+                <WarningBanner
+                  warning={{ code: null, message: rejectedMessage, severity: 'info' }}
+                  onDismiss={() => setDismissedRejected(true)}
+                />
+              </div>
             )}
 
             {sortedWarnings.length > 0 && (
@@ -122,6 +146,7 @@ export default function LayoutShell({
                       slot={slot}
                       restaurants={restaurants}
                       menus={menus}
+                      diff={diff}
                       onItemQuantityChange={onItemQuantityChange}
                       onItemRemove={onItemRemove}
                       onVariantChange={onVariantChange}
