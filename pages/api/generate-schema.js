@@ -8,6 +8,8 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { AGENT_PROMPT } from '../../lib/agentPrompt';
+import { REQUIREMENT_GENERATOR_PROMPT } from '../../lib/requirementGeneratorPrompt';
+import { filterData } from '../../lib/filterData';
 
 /**
  * Load JSON data from the project's data directory.
@@ -105,6 +107,99 @@ function getDebugSnippet(text, position, radius = 200) {
 }
 
 /**
+ * Call the Requirement Generator Agent to extract filter criteria from
+ * the user request (optionally with a previous schema for refinement).
+ */
+async function callRequirementAgent(userRequest, previousSchema, previousFilters, apiKey) {
+  let userMessage;
+
+  if (previousSchema && typeof previousSchema === 'object') {
+    const parts = [
+      '## Previous Order Schema',
+      JSON.stringify(previousSchema),
+    ];
+    if (previousFilters && typeof previousFilters === 'object') {
+      parts.push(
+        '## Previously Extracted Filters (carry forward unless explicitly changed)',
+        JSON.stringify(previousFilters)
+      );
+    }
+    parts.push(
+      '',
+      '## Refinement Instruction',
+      userRequest,
+    );
+    userMessage = parts.join('\n');
+  } else {
+    userMessage = [
+      '## User Request',
+      userRequest,
+    ].join('\n');
+  }
+
+  try {
+    const aiResponse = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'moonshotai/kimi-k2.6',
+        messages: [
+          { role: 'system', content: REQUIREMENT_GENERATOR_PROMPT },
+          { role: 'user', content: userMessage },
+        ],
+        temperature: 0.1,
+        max_tokens: 512,
+      }),
+    });
+
+    if (!aiResponse.ok) {
+      console.warn('[callRequirementAgent] AI API error:', aiResponse.status);
+      return getDefaultFilters();
+    }
+
+    const aiData = await aiResponse.json();
+    const rawContent = aiData.choices?.[0]?.message?.content;
+
+    if (!rawContent) {
+      return getDefaultFilters();
+    }
+
+    let cleaned = stripMarkdownFences(rawContent);
+    cleaned = sanitizeJsonStrings(cleaned);
+    const filters = JSON.parse(cleaned);
+
+    if (!filters || typeof filters !== 'object') {
+      return getDefaultFilters();
+    }
+
+    return filters;
+  } catch (err) {
+    console.warn('[callRequirementAgent] Error calling requirement agent:', err.message);
+    return getDefaultFilters();
+  }
+}
+
+function getDefaultFilters() {
+  return {
+    required_tags: [],
+    optional_tags: [],
+    excluded_tags: [],
+    cuisine: [],
+    categories: [],
+    max_price: null,
+    max_preparation_time: null,
+    max_delivery_time: null,
+    max_total_time: null,
+    max_delivery_fee: null,
+    min_rating: null,
+    promo_only: false,
+  };
+}
+
+/**
  * Main API handler.
  */
 export default async function handler(req, res) {
@@ -133,15 +228,38 @@ export default async function handler(req, res) {
       });
     }
 
+    // --- Stage 1: Requirement Generator Agent ---
+    const apiKey = process.env.NVIDIA_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({
+        error: 'AI API configuration missing (NVIDIA_API_KEY)',
+      });
+    }
+
+    const previousFilters =
+      previousSchema && previousSchema._requirementFilters
+        ? previousSchema._requirementFilters
+        : null;
+    const filters = await callRequirementAgent(userRequest, previousSchema, previousFilters, apiKey);
+    console.log('[generate-schema] Requirement filters:', JSON.stringify(filters));
+
+    const { restaurants: filteredRestaurants, menus: filteredMenus, filteringSkipped } =
+      filterData(restaurants, menus, filters);
+
+    if (filteringSkipped) {
+      console.warn('[generate-schema] Filtering skipped — fewer than 5 items matched; using full dataset.');
+    }
+
     // Build the AI prompt
     const systemPrompt = AGENT_PROMPT;
 
     let userMessageParts = [
       '## Restaurants',
-      JSON.stringify(restaurants, null, 2),
+      JSON.stringify(filteredRestaurants, null, 2),
       '',
       '## Menu Items',
-      JSON.stringify(menus, null, 2),
+      JSON.stringify(filteredMenus, null, 2),
       '',
       '## Current timestamp',
       new Date().toISOString(),
@@ -166,14 +284,6 @@ export default async function handler(req, res) {
     const userMessage = userMessageParts.join('\n');
 
     // Call the AI API via NVIDIA NIM
-    const apiKey = process.env.NVIDIA_API_KEY;
-
-    if (!apiKey) {
-      return res.status(500).json({
-        error: 'AI API configuration missing (NVIDIA_API_KEY)',
-      });
-    }
-
     const aiResponse = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -420,6 +530,11 @@ export default async function handler(req, res) {
       checkout_ready: blockingCodes.length === 0,
       blocking_issues: blockingCodes,
     };
+
+    // Store extracted requirement filters for refinement statekeeping
+    if (parsedSchema && typeof parsedSchema === 'object') {
+      parsedSchema._requirementFilters = filters;
+    }
 
     // Log the generated schema for debugging
     console.log('[generate-schema] Parsed schema:', JSON.stringify(parsedSchema, null, 2));
