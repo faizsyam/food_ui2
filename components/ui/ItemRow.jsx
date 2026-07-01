@@ -40,7 +40,6 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
   const handleDecrement = () => {
     if (safeQty > 1) onQuantityChange?.(item.id, safeQty - 1);
   };
-
   const handleIncrement = () => onQuantityChange?.(item.id, safeQty + 1);
 
   if (isUnavailable) {
@@ -57,28 +56,28 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
 
   if (showConfirm) {
     return (
-      <div className="py-2 flex items-center gap-3">
-        <span className="text-[14px] text-[#5C4F48]">Remove item?</span>
-        <button onClick={() => { onRemove?.(item.id); setShowConfirm(false); }} className="text-[14px] text-[#E11D48] font-semibold hover:underline">Yes</button>
-        <button onClick={() => setShowConfirm(false)} className="text-[14px] text-[#9C8E84]">Cancel</button>
+      <div className="py-3 px-4 flex items-center gap-3 bg-[#FEF2F2]/60 rounded-xl">
+        <span className="text-[14px] text-[#1A120D] font-medium">Remove item?</span>
+        <button onClick={() => { onRemove?.(item.id); setShowConfirm(false); }} className="text-[14px] text-[#E11D48] font-semibold hover:underline">Yes, remove</button>
+        <button onClick={() => setShowConfirm(false)} className="text-[14px] text-[#9C8E84] hover:text-[#5C4F48] font-medium">Cancel</button>
       </div>
     );
   }
 
   return (
-    <div className="flex items-start gap-4 py-2.5 transition-opacity duration-150">
-      <ItemImage itemId={item.id} className="w-24 aspect-square rounded-lg shrink-0" />
+    <div className="flex items-start gap-4 py-3 px-4 -mx-4 rounded-xl transition-colors duration-200 hover:bg-[#FDF8F3]/80">
+      <ItemImage itemId={item.id} className="w-24 aspect-square rounded-xl shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[14px] font-semibold text-[#1A120D]">{item.name}</span>
           {isBestSeller && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#D97706] bg-[#FFFBEB] px-2 py-[1px] rounded-full uppercase tracking-wide border border-[#FEF3C7]">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#D97706] bg-[#FFFBEB] border border-[#FEF3C7] px-2 py-[1px] rounded-full uppercase tracking-wide">
               <Star size={9} className="fill-[#F59E0B]" />
               Popular
             </span>
           )}
           {hasPromo && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#16A34A] bg-[#DCFCE7] px-2 py-[1px] rounded-full uppercase tracking-wide border border-[#86EFAC]">
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#16A34A] bg-[#DCFCE7] border border-[#86EFAC] px-2 py-[1px] rounded-full uppercase tracking-wide">
               <Sparkles size={9} className="fill-[#22C55E]" />
               {item.promo.label || `${item.promo.discount_percent}% Off`}
             </span>
@@ -88,7 +87,7 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
 
         {/* Variant selector */}
         {hasVariants && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
+          <div className="flex flex-wrap gap-1.5 mt-2.5">
             {item.variants.map((v) => {
               const isActive = selectedVariant === v.name;
               return (
@@ -108,7 +107,7 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
           </div>
         )}
 
-        {notes && <p className="text-[12px] italic text-[#9C8E84] mt-1">{notes}</p>}
+        {notes && <p className="text-[12px] italic text-[#9C8E84] mt-1.5">{notes}</p>}
       </div>
 
       <div className="flex flex-col items-end gap-2 shrink-0 min-w-[80px]">
@@ -123,15 +122,15 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
         <div className="flex items-center gap-1">
           <button
             onClick={safeQty === 1 ? () => setShowConfirm(true) : handleDecrement}
-            className="w-8 h-8 rounded-full border border-[#E0D4CA] flex items-center justify-center text-[#1A120D] hover:border-[#E8521A]/40 hover:bg-[#FFF0EA] transition-all duration-200 active:scale-90"
+            className="w-8 h-8 rounded-full border border-[#E0D4CA] flex items-center justify-center text-[#1A120D] hover:border-[#E8521A]/40 hover:bg-[#FFF0EA] transition-all duration-200 active:scale-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E8521A]/30"
             aria-label={safeQty === 1 ? 'Remove item' : 'Decrease quantity'}
           >
             {safeQty === 1 ? <Trash2 size={14} className="text-[#E11D48]" /> : <span className="text-[15px] leading-none -mt-[1px]">−</span>}
           </button>
-          <span className="text-[14px] font-semibold w-6 text-center">{safeQty}</span>
+          <span className="text-[14px] font-semibold w-6 text-center tabular-nums">{safeQty}</span>
           <button
             onClick={handleIncrement}
-            className="w-8 h-8 rounded-full border border-[#E0D4CA] flex items-center justify-center text-[#1A120D] hover:border-[#E8521A]/40 hover:bg-[#FFF0EA] transition-all duration-200 active:scale-90"
+            className="w-8 h-8 rounded-full border border-[#E0D4CA] flex items-center justify-center text-[#1A120D] hover:border-[#E8521A]/40 hover:bg-[#FFF0EA] transition-all duration-200 active:scale-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E8521A]/30"
             aria-label="Increase quantity"
           >
             <span className="text-[15px] leading-none -mt-[1px]">+</span>
@@ -140,7 +139,7 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
         {onAddToOrder && (
           <button
             onClick={() => onAddToOrder(item)}
-            className="flex items-center gap-1 text-[12px] font-semibold text-[#22A65E] hover:text-[#1A8246] transition-colors px-2.5 py-1 rounded-full border border-[#DCFCE7] bg-[#F0FDF4] hover:bg-[#DCFCE7]"
+            className="flex items-center gap-1 text-[12px] font-semibold text-[#22A65E] hover:text-[#1A8246] px-2.5 py-1.5 rounded-full border border-[#DCFCE7] bg-[#F0FDF4] hover:bg-[#DCFCE7] active:scale-95 transition-all duration-150"
             aria-label="Add to order"
           >
             <ShoppingCart size={12} />

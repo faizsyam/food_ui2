@@ -73,7 +73,9 @@ export default function HomePage() {
 
       <main>
         <HeroSection isCompact={isResult}>
-          <RequestInput onSubmit={handleSubmit} isLoading={isLoading} />
+          {!schema && (
+            <RequestInput onSubmit={handleSubmit} isLoading={isLoading} />
+          )}
           {error && currentView === VIEWS.ERROR && (
             <p className="mt-3 text-[14px] text-[#DC2626]">{error}</p>
           )}

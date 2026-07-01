@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,22 +7,27 @@
 :root {
   --bg: #FFF9F5;
   --surface: #FFF4EE;
+  --surface-elevated: #FFFFFF;
   --accent: #E8521A;
   --accent-hover: #D4491A;
   --accent-light: #FFF0EA;
+  --accent-subtle: #FFF7F2;
   --text-primary: #1A120D;
   --text-secondary: #5C4F48;
-  --text-muted: #9C8E84
+  --text-muted: #9C8E84;
   --text-subtle: #B5A99F;
-  --border-default: #F0E8E2;
+  --text-placeholder: #C4B5AB;
+  --border: #F0E8E2;
+  --border-light: #F7F0EB;
   --border-interactive: #E0D4CA;
   --success: #22A65E;
+  --success-light: #F0FDF4;
   --warning: #D97706;
+  --warning-light: #FFFBEB;
   --error: #E11D48;
-  --info: #2563EB;
-  --card-bg: #FFFFFF;
-  --card-shadow: 0 1px 2px rgba(19, 11, 4, 0.04), 0 4px 12px rgba(19, 11, 4, 0.06);
-  --card-shadow-hover: 0 4px 6px rgba(19, 11, 4, 0.04), 0 8px 24px rgba(19, 11, 4, 0.08);
+  --error-light: #FEF2F2;
+  --card: #FFFFFF;
+  --card-muted: #FFF9F5;
 }
 
 html {
@@ -37,25 +42,35 @@ body {
   font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-primary);
   background: var(--bg);
+  -webkit-font-feature-settings: "kern" 1, "liga" 1;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
-/* Custom scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #e0d4ca; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: #b5a99f; }
+::-webkit-scrollbar-thumb { background: #E0D4CA; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #B5A99F; }
 
 /* Animations */
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes fade-in-from-below {
-  from { opacity: 0; transform: translateY(30px); }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes pulse-soft {
-  0%, 100% { opacity: 0.6; }
+  0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
 @keyframes pulse-glow {
@@ -64,7 +79,7 @@ body {
 }
 @keyframes float-gentle {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50% { transform: translateY(-3px); }
 }
 @keyframes spin-slow {
   to { transform: rotate(360deg); }
@@ -73,19 +88,80 @@ body {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
 
+.animate-fade-in {
+  animation: fade-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
 .animate-fade-in-up {
-  animation: fade-in-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fade-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   opacity: 0;
 }
 .animate-fade-in-from-below {
-  animation: fade-in-from-below 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fade-in-from-below 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   opacity: 0;
 }
-.animate-pulse-soft { animation: pulse-soft 2.2s ease-in-out infinite; }
-.animate-float-gentle { animation: float-gentle 4s ease-in-out infinite; }
-.animate-spin-slow { animation: spin-slow 1s linear infinite; }
-.animate-pulse-glow { animation: pulse-glow 0.3s ease forwards; }
+.animate-pulse-soft {
+  animation: pulse-soft 2.5s ease-in-out infinite;
+}
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 1.2s linear infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 0.3s ease forwards;
+}
 .animate-scale-in {
   animation: scale-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.animate-slide-up {
+  animation: slide-up 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Skeleton shimmer */
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Focus ring base */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #FFF, 0 0 0 4px #E8521A4D;
+  border-radius: 12px;
+}
+
+/* Smooth transitions on interactive elements */
+button, a, [role='button'] {
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+/* Number formatting */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Text balance for modern browsers */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

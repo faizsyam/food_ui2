@@ -6,19 +6,22 @@ export default function WarningBanner({ warning, onDismiss, onClick }) {
   const { code, message, severity, suggestion } = warning;
   const isBlocking = severity === 'blocking';
 
-  const containerClass = isBlocking
-    ? 'bg-[#FEF2F2] border-[#FECACA] text-[#E11D48]'
-    : 'bg-[#FFF9F5] border-[#F0E8E2] text-[#B45309]';
+  const severityStyles = isBlocking
+    ? 'bg-[#FEF2F2] border-[#FEE2E2] text-[#E11D48]'
+    : 'bg-[#FFF9F5] border-[#F0E8E2] text-[#D97706]';
 
   const Icon = isBlocking ? AlertTriangle : code === 'AUTO_REASSIGNED_OPTION' ? RefreshCw : Info;
 
   return (
     <div
-      className={`relative rounded-lg border px-4 py-3 ${containerClass}`}
+      className={`relative rounded-xl border px-4 py-3.5 ${severityStyles} ${onClick ? 'cursor-pointer' : ''} hover:shadow-soft transition-shadow duration-200`}
+      onClick={onClick}
       role="alert"
     >
       <div className="flex items-start gap-3 pr-8">
-        <Icon size={16} className="shrink-0 mt-0.5" />
+        <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isBlocking ? 'bg-[#FEE2E2]/60' : 'bg-[#FEF3C7]/40'}`}>
+          <Icon size={16} className="shrink-0" />
+        </div>
         <div className="flex-1 min-w-0">
           {code && (
             <p className="text-[11px] font-semibold uppercase tracking-wider opacity-70">
@@ -35,9 +38,9 @@ export default function WarningBanner({ warning, onDismiss, onClick }) {
       </div>
       {onDismiss && (
         <button
-          onClick={onDismiss}
+          onClick={(e) => { e.stopPropagation(); onDismiss(); }}
           aria-label="Dismiss warning"
-          className="absolute top-3 right-3 opacity-50 hover:opacity-100 transition-opacity"
+          className="absolute top-3.5 right-3.5 p-1 rounded-lg hover:bg-white/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current/30"
         >
           <X size={16} />
         </button>

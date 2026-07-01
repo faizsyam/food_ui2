@@ -7,13 +7,13 @@ import { formatIDR } from '../../lib/format';
 function RestaurantImage({ id }) {
   const [hasError, setHasError] = useState(false);
   return (
-    <div className="w-full h-40 rounded-t-2xl bg-[#F0E8E2] overflow-hidden">
+    <div className="w-full h-44 rounded-t-2xl bg-[#F0E8E2] overflow-hidden">
       {!hasError && id && (
         <img
           src={`/${id}.webp`}
           alt=""
           onError={() => setHasError(true)}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.03]"
         />
       )}
     </div>
@@ -215,7 +215,7 @@ export default function SlotCard({
 
   return (
     <div
-      className={`bg-white rounded-2xl border border-[#F0E8E2] overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300 ${
+      className={`bg-white rounded-2xl border border-[#F0E8E2]/80 overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 ${
         showModifiedBorder ? 'border-l-2 border-l-[#2563EB]' : ''
       }`}
       style={cardStyle}
@@ -229,20 +229,40 @@ export default function SlotCard({
         </div>
       )}
 
+      {/* Preference mismatch notice */}
+      {selectedOption?.meets_preferences === false && (
+        <div className="px-6 pt-4">
+          <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5">
+            <AlertCircle size={15} className="text-amber-600 shrink-0 mt-0.5" />
+            <p className="text-[12px] text-amber-800 leading-snug">
+              {selectedOption.highlight_reason || "This option doesn't fully meet the stated preferences for this person."}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Option selector tabs */}
       {resolvedOptions.length > 1 && (
         <div className="px-6 pt-5">
-          <p className="text-[11px] font-bold text-[#9C8E84] uppercase tracking-widest mb-2">
-            Meal Options for {slot.person?.name || 'Guest'}
-          </p>
+          <div className="flex items-center gap-2 mb-2">
+            <p className="text-[11px] font-bold text-[#9C8E84] uppercase tracking-widest">
+              Meal Options for {slot.person?.name || 'Guest'}
+            </p>
+            {resolvedOptions.some((o) => o.meets_preferences === false) && (
+              <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-[1px]">
+                {resolvedOptions.filter((o) => o.meets_preferences === false).length} partial
+              </span>
+            )}
+          </div>
           <div className="flex flex-wrap gap-2">
             {resolvedOptions.map((opt) => {
               const isSelected = opt.option_id === selectedOptionId;
-              const showWarning = !isSelected && (opt.meets_min_order === false || opt.deadline_ok === false || opt.meets_preferences === false);
+              const isCloseMatch = opt.meets_preferences === false;
+              const showWarning = !isSelected && (opt.meets_min_order === false || opt.deadline_ok === false || isCloseMatch);
               let tooltip = '';
               if (showWarning) {
                 const reasons = [];
-                if (opt.meets_preferences === false) reasons.push("Doesn't match preferences");
+                if (isCloseMatch) reasons.push("Doesn't fully meet preferences");
                 if (opt.meets_min_order === false) reasons.push('Below minimum order');
                 if (opt.deadline_ok === false) reasons.push("Won't meet your deadline");
                 tooltip = reasons.join(' and ');
@@ -253,15 +273,19 @@ export default function SlotCard({
                   onClick={() => onSelectOption?.(slot.slot_id, opt.option_id)}
                   className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold border transition-all duration-200 ${
                     isSelected
-                      ? 'bg-[#1A120D] text-white border-[#1A120D]'
-                      : 'bg-white text-[#5C4F48] border-[#E0D4CA] hover:border-[#9C8E84]'
+                      ? isCloseMatch
+                        ? 'bg-amber-900 text-white border-amber-900'
+                        : 'bg-[#1A120D] text-white border-[#1A120D]'
+                      : isCloseMatch
+                        ? 'bg-amber-50 text-amber-700 border-amber-300 hover:border-amber-400'
+                        : 'bg-white text-[#5C4F48] border-[#E0D4CA] hover:border-[#9C8E84]'
                   }`}
                   title={tooltip || undefined}
                 >
                   <span className="flex items-center gap-1">
                     {opt.label || opt.option_id}
                     {showWarning && (
-                      <AlertCircle size={14} className="text-[#D97706] shrink-0" />
+                      <AlertCircle size={14} className="text-amber-600 shrink-0" />
                     )}
                   </span>
                 </button>

@@ -188,6 +188,7 @@ function getDefaultFilters() {
     optional_tags: [],
     excluded_tags: [],
     cuisine: [],
+    excluded_cuisines: [],
     categories: [],
     max_price: null,
     max_preparation_time: null,
@@ -297,7 +298,7 @@ export default async function handler(req, res) {
           { role: 'user', content: userMessage },
         ],
         temperature: 0.2,
-        max_tokens: 4096,
+        max_tokens: 8192,
       }),
     });
 
