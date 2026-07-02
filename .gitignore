@@ -3,4 +3,4 @@
 /.env.local
 /.next
 /node_modules
-/CLAUDE.md
+/CLAUDE.md.eslintrc.json

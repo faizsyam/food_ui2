@@ -201,6 +201,80 @@ function getDefaultFilters() {
 }
 
 /**
+ * When multiple people have identical preferences, merge their slots into one.
+ * Item quantities are scaled by the number of people, and names are combined.
+ */
+function mergeDuplicateSlots(slots, menus) {
+  // Group slots by their preferences object (deep-equal via JSON)
+  const groups = new Map();
+
+  for (const slot of slots) {
+    const prefKey = JSON.stringify(slot.person?.preferences || {});
+    if (!groups.has(prefKey)) {
+      groups.set(prefKey, []);
+    }
+    groups.get(prefKey).push(slot);
+  }
+
+  const merged = [];
+
+  for (const group of groups.values()) {
+    if (group.length === 1) {
+      merged.push(group[0]);
+      continue;
+    }
+
+    const base = group[0];
+    const count = group.length;
+
+    // Combine person names
+    const names = group.map((s) => s.person?.name).filter(Boolean);
+    let combinedName;
+    if (names.length === 2) {
+      combinedName = `${names[0]} and ${names[1]}`;
+    } else if (names.length > 2) {
+      combinedName = `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+    } else {
+      combinedName = names[0] || 'Unknown';
+    }
+
+    // Scale options from the first slot
+    const scaledOptions = (base.options || []).map((opt) => {
+      const scaledItems = (opt.items || []).map((item) => ({
+        ...item,
+        quantity: (item.quantity || 1) * count,
+      }));
+
+      // Recalculate subtotal from menu data
+      let subtotal = 0;
+      for (const item of scaledItems) {
+        const menuItem = menus.find((m) => m.id === item.item_id);
+        if (menuItem) {
+          const unitPrice = menuItem.promo?.discounted_price ?? menuItem.price ?? 0;
+          subtotal += unitPrice * item.quantity;
+        }
+      }
+
+      return {
+        ...opt,
+        items: scaledItems,
+        subtotal,
+      };
+    });
+
+    merged.push({
+      ...base,
+      person: {
+        ...base.person,
+        name: combinedName,
+      },
+      options: scaledOptions,
+    });
+  }
+
+  return merged;
+}
+/**
  * Main API handler.
  */
 export default async function handler(req, res) {
@@ -372,6 +446,9 @@ export default async function handler(req, res) {
         error: 'Invalid schema returned',
       });
     }
+
+    // Merge slots with identical preferences
+    parsedSchema.slots = mergeDuplicateSlots(parsedSchema.slots, menus);
 
     // -- Post-processing ----------------------------------------------------
 

@@ -14,3 +14,4 @@ export { default as TimelineView } from './TimelineView';
 export { default as OrderConfirmation } from './OrderConfirmation';
 export { default as MobileCheckoutBar } from './MobileCheckoutBar';
 export { default as GroupedResultCard } from './GroupedResultCard';
+export { default as InlineWarning } from './InlineWarning';

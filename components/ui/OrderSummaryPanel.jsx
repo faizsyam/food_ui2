@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react"
-import { Copy, Check, Truck, Trash2, ShoppingCart, User, Store, Clock, Calendar, Users, Sparkles } from "lucide-react"
+import { Copy, Check, Truck, Trash2, ShoppingCart, User, Store, Clock, Calendar, Users } from "lucide-react"
 import { formatIDR } from "../../lib/format"
 import { formatTimingRange, calculateOrderTiming } from "../../lib/timing"
 
@@ -131,15 +131,7 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
         {/* Title + grouping toggle */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <h2 className="text-[17px] font-bold text-[#1A120D]">
-              {isEmpty ? "AI Recommended" : "Order Summary"}
-            </h2>
-            {isEmpty && hasAiSummary && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#F0FDF4] text-[#16A34A] text-[10px] font-bold uppercase tracking-wide border border-[#DCFCE7]">
-                <Sparkles size={10} className="fill-[#22C55E]" />
-                AI
-              </span>
-            )}
+            <h2 className="text-[17px] font-bold text-[#1A120D]">Order Summary</h2>
           </div>
           {!isEmpty && (
             <div className="flex items-center gap-1.5 bg-[#FFF9F5] border border-[#F0E8E2] rounded-xl p-0.5">
@@ -169,47 +161,8 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
           )}
         </div>
 
-        {/* Empty state or AI Recommended Summary */}
-        {isEmpty && hasAiSummary && (
-          <div className="space-y-4">
-            {aiSummary.restaurant_breakdown.map((entry) => {
-              const restaurant = restaurantMap.get(entry.restaurant_id)
-              const totalForRestaurant = (entry.items_subtotal || 0) + (entry.delivery_fee || 0)
-              return (
-                <div key={entry.restaurant_id} className="bg-[#FFF9F5] rounded-xl p-4 border border-[#F0E8E2]">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[14px] font-bold text-[#1A120D]">{restaurant?.name || entry.restaurant_id}</span>
-                        {restaurant?.cuisine && (
-                          <span className="text-[11px] font-semibold text-[#9C8E84]">{restaurant.cuisine}</span>
-                        )}
-                      </div>
-                      <p className="text-[12px] text-[#9C8E84] mt-0.5">
-                        {Array.isArray(entry.slot_ids) ? `${entry.slot_ids.length} ${entry.slot_ids.length === 1 ? 'order' : 'orders'}` : ''}
-                      </p>
-                      {entry.meets_min_order === false && (
-                        <p className="text-[12px] text-[#E11D48] font-medium mt-1">
-                          Below minimum order of {formatIDR(entry.min_order || 0)}
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-[14px] font-bold text-[#1A120D] tabular-nums">
-                        {formatIDR(totalForRestaurant)}
-                      </p>
-                      <p className="text-[11px] text-[#9C8E84] tabular-nums mt-0.5">
-                        {formatIDR(entry.items_subtotal || 0)} + {formatIDR(entry.delivery_fee || 0)} delivery
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-
-        {isEmpty && !hasAiSummary && (
+        {/* Empty state */}
+        {isEmpty && (
           <div className="text-center py-10">
             <div className="w-14 h-14 bg-[#FFF9F5] rounded-2xl flex items-center justify-center mx-auto mb-4">
               <ShoppingCart size={28} className="text-[#E0D4CA]" />
@@ -272,7 +225,7 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
         )}
 
         {/* Price totals */}
-        {(hasAiSummary || !isEmpty) && (
+        {!isEmpty && (
           <div className="mt-5 pt-4 border-t border-[#F0E8E2]">
             <div className="flex justify-between text-[15px] font-bold">
               <span className="text-[#1A120D]">Grand Total</span>
@@ -282,7 +235,7 @@ export default function OrderSummaryPanel({ schema, restaurants, menus, onChecko
         )}
 
         {/* Budget */}
-        {budgetLimit && (hasAiSummary || !isEmpty) && (
+        {budgetLimit && !isEmpty && (
           <div className="mt-5">
             <div className="w-full h-2.5 bg-[#F0E8E2] rounded-full overflow-hidden">
               <div className={`h-full rounded-full transition-all duration-500 ${over ? "bg-[#E11D48]" : near ? "bg-[#D97706]" : "bg-[#22A65E]"}`} style={{width: Math.min(progress, 100) + "%"}} />

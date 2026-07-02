@@ -113,7 +113,7 @@ export default function ItemRow({ item, quantity, selectedVariant, notes, onQuan
       <div className="flex flex-col items-end gap-2 shrink-0 min-w-[80px]">
         {hasPromo ? (
           <div className="flex flex-col items-end">
-            <span className="text-[11px] text-[#9C8E84] line-through tabular-nums">{formatIDR((item.price ?? 0) + priceDelta)}</span>
+            <span className="text-[11px] text-[#9C8E84] line-through tabular-nums">{formatIDR(((item.price ?? 0) + priceDelta) * safeQty)}</span>
             <span className="text-[14px] font-bold text-[#22A65E] tabular-nums">{formatIDR(lineTotal)}</span>
           </div>
         ) : (
